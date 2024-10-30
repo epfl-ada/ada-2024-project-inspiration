@@ -1,8 +1,10 @@
+# Your project name
 This is a template repo for your project to help you organise and document your code better. 
 Please use this structure for your project and document the installation, usage and structure as below.
 
-## Quickstart
+## Quickstart
 
+```bash
 # clone project
 git clone <project link>
 cd <project repo>
@@ -14,12 +16,20 @@ conda activate <env_name>
 
 # install requirements
 pip install -r pip_requirements.txt
-How to use the library
+```
+
+
+
+### How to use the library
 Tell us how the code is arranged, any explanations goes here.
 
-Project Structure
+
+
+## Project Structure
+
 The directory structure of new project looks like this:
 
+```
 ├── data                        <- Project data files
 │
 ├── src                         <- Source code
@@ -35,3 +45,4 @@ The directory structure of new project looks like this:
 ├── .gitignore                  <- List of files ignored by git
 ├── pip_requirements.txt        <- File for installing python dependencies
 └── README.md
+```
