@@ -6,7 +6,7 @@ Please use this structure for your project and document the installation, usage 
 
 ```bash
 # clone project
-git clone <project link>
+git clone <https://github.com/epfl-ada/ada-2024-project-inspiration>
 cd <project repo>
 
 # [OPTIONAL] create conda environment
