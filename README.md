@@ -31,9 +31,14 @@ The directory structure of new project looks like this:
 
 ```
 ├── data                        <- Project data files
+│   ├── raw_data                <- Data unprocessed directory
+│   ├── processed_data          <- Processed data directory      
 │
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
+│       ├── load_awards_data.py                 <- file for loading awards data in \processed_data
+│       ├── data_visualisation.py               <- data visualization file called by results.ipynb
+│       ├── load_awards_data.py                 <- file for cleaning our datasets
 │   ├── models                          <- Model directory
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
