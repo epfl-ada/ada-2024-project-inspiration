@@ -1,5 +1,2 @@
-# # Ignore CSV files (e.g., data exports)
-# *.tsv
-# # Ignore specific files in data/raw_data
-# data/raw_data/plot_summaries.txt
-# data/raw_data/tvtropes.clusters.txt
+# Ignore all files in the data/raw_data directory
+\data\raw_data
