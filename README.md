@@ -2,28 +2,13 @@
 This is a template repo for your project to help you organise and document your code better. 
 Please use this structure for your project and document the installation, usage and structure as below.
 
-## Quickstart
-
-```bash
-# clone project
-git clone <https://github.com/epfl-ada/ada-2024-project-inspiration>
-cd <project repo>
-
-# [OPTIONAL] create conda environment
-conda create -n <env_name> python=3.11 or ...
-conda activate <env_name>
-
-
-# install requirements
-pip install -r pip_requirements.txt
-```
-
-
 
 ### How to use the library
 For our project pipeline, we used the given project template. We added 2 subdirectories to data : \raw_data with the uncleaned datasets and \processed_data with the 
 cleaned data sets
 
+all the dataset used for our project are available trhough this google drive link : 
+https://drive.google.com/drive/folders/15jMzHA16hZhBR0086Y3cT6uLr1BEbrLo?usp=sharing
 
 
 ## Project Structure
