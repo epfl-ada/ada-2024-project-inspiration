@@ -160,6 +160,39 @@ def replace_longest_ethnicity_with_eurasian(df_cleaned):
         print(f"An error occurred: {e}")
         return df_cleaned
 
+def country_language_dico_clean(df_clean):
+    """
+    For country and language columns:
+    - Removing rows where the dictionaries are empty.
+    - Extracting only the values from the dictionaries and storing them as sets.
+    """
+    try:
+        # Drop the rows where the dictionaries are empty
+        df_clean = df_clean[df_clean['Movie_countries'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
+        df_clean = df_clean[df_clean['Movie_languages'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
+        print("Empty dictionaries removed successfully.")
 
+        # Extract only the country and language names
+        df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
+            lambda x: set(x.values()) if isinstance(x, dict) else set()
+        )
+        df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
+            lambda x: set(x.values()) if isinstance(x, dict) else set()
+        )
+        print("Values from dico extracted successfully.")
 
- 
+        return df_clean
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def remove_duplicates(df_clean):
+    """
+    Removes exact duplicate rows from the DataFrame.
+    """
+    try:
+        df_cleaned = df_clean.drop_duplicates()
+        print("Duplicates removed successfully.")
+        return df_cleaned
+    except Exception as e:
+        print(f"An error occurred while removing duplicates: {e}")
+        return df_clean
