@@ -196,3 +196,52 @@ def remove_duplicates(df_clean):
     except Exception as e:
         print(f"An error occurred while removing duplicates: {e}")
         return df_clean
+
+def main(
+    movie_file_path, 
+    character_file_path, 
+    ethnicity_mapping_file_path
+):
+    """
+    Main function to process movie and character data.
+    """
+    try:
+        # Load movie and character data
+        print("Loading movie and character data...")
+        df_movie = load_df(movie_file_path)
+        df_character = load_df(character_file_path)
+
+        # Keep only information of interest
+        print("Selecting and merging columns of interest...")
+        df_interest = keep_info_of_interest(df_movie, df_character)
+
+        # Drop rows with NaN values
+        print("Dropping rows with NaN values...")
+        df_cleaned = first_drop_nan(df_interest)
+
+        # Standardize the release date format
+        print("Rewriting release dates...")
+        df_cleaned = rewrite_date(df_cleaned)
+
+        # Replace ethnicity codes with corresponding labels
+        print("Replacing ethnicity codes with labels...")
+        df_cleaned = replace_ethnicity_codes(df_cleaned, ethnicity_mapping_file_path)
+
+        # Replace the longest ethnicity with 'Eurasian'
+        print("Replacing the longest ethnicity with 'Eurasian'...")
+        df_cleaned = replace_longest_ethnicity_with_eurasian(df_cleaned)
+
+        # Clean country and language columns
+        print("Cleaning country and language columns...")
+        df_cleaned = country_language_dico_clean(df_cleaned)
+
+        # Remove duplicate rows
+        print("Removing duplicate rows...")
+        df_cleaned = remove_duplicates(df_cleaned)
+
+        print("Data processing completed successfully.")
+        return df_cleaned
+
+    except Exception as e:
+        print(f"An error occurred during the data processing pipeline: {e}")
+        return None
