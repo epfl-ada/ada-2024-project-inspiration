@@ -198,9 +198,7 @@ def country_language_dico_clean(df_clean):
         # Check if required columns exist
         if 'Movie_countries' not in df_clean.columns or 'Movie_languages' not in df_clean.columns:
             raise KeyError("Required columns 'Movie_countries' or 'Movie_languages' are missing.")
-        print("Columns exist :)")
-        # PAS EMPTY --> print(df_clean)
-
+        
         # Convert strings to dictionaries
         df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
         df_clean['Movie_languages'] = df_clean['Movie_languages'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
@@ -210,18 +208,17 @@ def country_language_dico_clean(df_clean):
             lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
         df_clean = df_clean[df_clean['Movie_languages'].apply(
             lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
-        print("Empty dico bye bye")
-        
+        print("Empty dictionaries removed successfully.")
+
         # Extract dictionary values into sets
-        # EMPTY --> print(df_clean)
         df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
         )
         df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_languages'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
         )
+        print("Values from dico extracted successfully.")
 
-        print("Country and language columns cleaned successfully.")
         return df_clean
 
     except KeyError as e:
@@ -234,6 +231,8 @@ def remove_duplicates(df_clean):
     Removes exact duplicate rows from the DataFrame.
     """
     try:
+        df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(lambda x: ', '.join(sorted(x)) if isinstance(x, set) else x)
+        df_clean['Movie_languages'] = df_clean['Movie_languages'].apply(lambda x: ', '.join(sorted(x)) if isinstance(x, set) else x)
         df_cleaned = df_clean.drop_duplicates()
         print("Duplicates removed successfully.")
         return df_cleaned
