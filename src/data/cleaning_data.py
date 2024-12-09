@@ -219,6 +219,8 @@ def main(
         print("Dropping rows with NaN values...")
         df_cleaned = first_drop_nan(df_interest)
 
+        print(df_interest.head())
+
         # Standardize the release date format
         print("Rewriting release dates...")
         df_cleaned = rewrite_date(df_cleaned)
