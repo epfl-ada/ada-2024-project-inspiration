@@ -9,7 +9,7 @@ def load_df(path_df):
     """
     try:
         df = pd.read_csv(path_df, sep='\t')
-        print("DataFrame loaded successfully.")
+        # print("DataFrame loaded successfully.")
         return df
     except FileNotFoundError:
         print(f"Error: The file at path '{path_df}' does not exist. Please check the file path.")
@@ -56,18 +56,17 @@ def keep_info_of_interest(df_movie, df_character):
         "Freebase_actor_ID"
         ]
         df_character.columns = new_column_names_c
-        print("Columns name changed successfully.")
+        # print("Columns name changed successfully.")
 
         df_movie_selected = df_movie[['Wikipedia_movie_ID', 'Movie_name', 'Movie_release_date', "Movie_runtime", "Movie_languages", 'Movie_countries']]
         df_character_selected = df_character[['Wikipedia_movie_ID', 'Movie_release_date', 'Actor_ethnicity']]
-        print("Columns selected successfully.")
+        # print("Columns selected successfully.")
 
         df_interest = pd.merge(df_character_selected, df_movie_selected, on=['Wikipedia_movie_ID', 'Movie_release_date'], how='inner')
-        print("DataFrame merged successfully.")
+        # print("DataFrame merged successfully.")
         return df_interest
     except Exception as e:
         print(f"An error occurred while selecting and merging dfs: {e}")
-
 
 def first_drop_nan(df_interest):
     """
@@ -75,7 +74,7 @@ def first_drop_nan(df_interest):
     """
     try:
         df_cleaned = df_interest.dropna()
-        print(f"Rows with NaN values dropped. Remaining rows: {len(df_cleaned)}")
+        # print(f"Rows with NaN values dropped. Remaining rows: {len(df_cleaned)}")
         return df_cleaned
     except Exception as e:
         print(f"An error occurred while dropping NaN rows: {e}")
@@ -86,13 +85,11 @@ def rewrite_date(df_cleaned):
     """
     try:
         df_cleaned.loc[:,'Movie_release_date'] = df_cleaned['Movie_release_date'].astype(str).str[:4]
-        print("Released Date column changed successfully.")
+        # print("Released Date column changed successfully.")
     except Exception as e:
         print(f"An error occurred while modifying the release date column: {e}")
 
     return df_cleaned
-
-import pandas as pd
 
 def replace_ethnicity_codes(df_cleaned, mapping_file_path):
     """
@@ -124,7 +121,7 @@ def replace_ethnicity_codes(df_cleaned, mapping_file_path):
         df_cleaned = df_cleaned.dropna(subset=['Actor_ethnicity'])
         df_cleaned['Actor_ethnicity'] = df_cleaned['Actor_ethnicity'].astype(str)
 
-        print("Ethnicity column replaced successfully.")
+        # print("Ethnicity column replaced successfully.")
         return df_cleaned
 
     except FileNotFoundError:
@@ -150,43 +147,12 @@ def replace_longest_ethnicity_with_eurasian(df_cleaned):
         # Replace the longest ethnicity with 'Eurasian'
         df_cleaned['Actor_ethnicity'] = df_cleaned['Actor_ethnicity'].replace(longest_ethnicity, 'Eurasian')
 
-        print("Replacement complete.")
+        # print("Replacement complete.")
         return df_cleaned
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return df_cleaned
-
-# def country_language_dico_clean(df_clean):
-#     """
-#     For country and language columns:
-#     - Removing rows where the dictionaries are empty.
-#     - Extracting only the values from the dictionaries and storing them as sets.
-#     """
-#     try:
-#         # Drop the rows where the dictionaries are empty
-#         df_clean = df_clean[df_clean['Movie_countries'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
-#         df_clean = df_clean[df_clean['Movie_languages'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
-#         print("Empty dictionaries removed successfully.")
-
-#         # Extract only the country and language names
-#         # df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
-#         #     lambda x: set(x.values()) if isinstance(x, dict) else set()
-#         # )
-#         df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(
-#             lambda x: set(x.values()) if isinstance(x, dict) else set()
-#         ).copy()
-#         # df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
-#         #     lambda x: set(x.values()) if isinstance(x, dict) else set()
-#         # )
-#         df_clean['Movie_languages'] = df_clean['Movie_countries'].apply(
-#             lambda x: set(x.values()) if isinstance(x, dict) else set()
-#         ).copy()
-#         print("Values from dico extracted successfully.")
-
-#         return df_clean
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
 
 def country_language_dico_clean(df_clean):
     """
@@ -208,7 +174,7 @@ def country_language_dico_clean(df_clean):
             lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
         df_clean = df_clean[df_clean['Movie_languages'].apply(
             lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
-        print("Empty dictionaries removed successfully.")
+        # print("Empty dictionaries removed successfully.")
 
         # Extract dictionary values into sets
         df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
@@ -217,7 +183,7 @@ def country_language_dico_clean(df_clean):
         df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_languages'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
         )
-        print("Values from dico extracted successfully.")
+        # print("Values from dico extracted successfully.")
 
         return df_clean
 
@@ -234,7 +200,7 @@ def remove_duplicates(df_clean):
         df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(lambda x: ', '.join(sorted(x)) if isinstance(x, set) else x)
         df_clean['Movie_languages'] = df_clean['Movie_languages'].apply(lambda x: ', '.join(sorted(x)) if isinstance(x, set) else x)
         df_cleaned = df_clean.drop_duplicates()
-        print("Duplicates removed successfully.")
+        # print("Duplicates removed successfully.")
         return df_cleaned
     except Exception as e:
         print(f"An error occurred while removing duplicates: {e}")
@@ -250,39 +216,35 @@ def main(
     """
     try:
         # Load movie and character data
-        print("Loading movie and character data...")
         df_movie = load_df(movie_file_path)
         df_character = load_df(character_file_path)
 
         # Keep only information of interest
-        print("Selecting and merging columns of interest...")
         df_interest = keep_info_of_interest(df_movie, df_character)
 
         # Drop rows with NaN values
-        print("Dropping rows with NaN values...")
         df_cleaned = first_drop_nan(df_interest)
 
         # Standardize the release date format
-        print("Rewriting release dates...")
         df_cleaned = rewrite_date(df_cleaned)
 
         # Replace ethnicity codes with corresponding labels
-        print("Replacing ethnicity codes with labels...")
         df_cleaned = replace_ethnicity_codes(df_cleaned, ethnicity_mapping_file_path)
 
         # Replace the longest ethnicity with 'Eurasian'
-        print("Replacing the longest ethnicity with 'Eurasian'...")
         df_cleaned = replace_longest_ethnicity_with_eurasian(df_cleaned)
 
         # Clean country and language columns
-        print("Cleaning country and language columns...")
         df_cleaned = country_language_dico_clean(df_cleaned)
 
         # Remove duplicate rows
-        print("Removing duplicate rows...")
         df_cleaned = remove_duplicates(df_cleaned)
 
-        print("Data processing completed successfully.")
+        # print("Data processing completed successfully.")
+        
+        df_cleaned = df_cleaned.applymap(lambda x: x.encode('utf-8', 'ignore').decode('utf-8') if isinstance(x, str) else x)
+        df_cleaned.to_csv("data/processed_data/clean_dataset.csv", index=False, encoding='utf-8-sig')
+        print(f"Cleaned data saved to {'data/preprocess_data/clean_dataset.csv'}")
         return df_cleaned
 
     except Exception as e:
