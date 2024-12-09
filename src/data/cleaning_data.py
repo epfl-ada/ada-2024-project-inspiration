@@ -156,34 +156,70 @@ def replace_longest_ethnicity_with_eurasian(df_cleaned):
         print(f"An error occurred: {e}")
         return df_cleaned
 
+# def country_language_dico_clean(df_clean):
+#     """
+#     For country and language columns:
+#     - Removing rows where the dictionaries are empty.
+#     - Extracting only the values from the dictionaries and storing them as sets.
+#     """
+#     try:
+#         # Drop the rows where the dictionaries are empty
+#         df_clean = df_clean[df_clean['Movie_countries'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
+#         df_clean = df_clean[df_clean['Movie_languages'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
+#         print("Empty dictionaries removed successfully.")
+
+#         # Extract only the country and language names
+#         # df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
+#         #     lambda x: set(x.values()) if isinstance(x, dict) else set()
+#         # )
+#         df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(
+#             lambda x: set(x.values()) if isinstance(x, dict) else set()
+#         ).copy()
+#         # df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
+#         #     lambda x: set(x.values()) if isinstance(x, dict) else set()
+#         # )
+#         df_clean['Movie_languages'] = df_clean['Movie_countries'].apply(
+#             lambda x: set(x.values()) if isinstance(x, dict) else set()
+#         ).copy()
+#         print("Values from dico extracted successfully.")
+
+#         return df_clean
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+
 def country_language_dico_clean(df_clean):
     """
-    For country and language columns:
-    - Removing rows where the dictionaries are empty.
-    - Extracting only the values from the dictionaries and storing them as sets.
+    Clean country and language columns:
+    - Remove rows with empty dictionaries.
+    - Extract values from dictionaries into sets.
     """
     try:
-        # Drop the rows where the dictionaries are empty
-        df_clean = df_clean[df_clean['Movie_countries'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
-        df_clean = df_clean[df_clean['Movie_languages'].apply(lambda x: isinstance(x, dict) and len(x) > 0)]
-        print("Empty dictionaries removed successfully.")
+        # Check if required columns exist
+        if 'Movie_countries' not in df_clean.columns or 'Movie_languages' not in df_clean.columns:
+            raise KeyError("Required columns 'Movie_countries' or 'Movie_languages' are missing.")
+        print("Columns exist :)")
 
-        # Extract only the country and language names
-        # df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
-        #     lambda x: set(x.values()) if isinstance(x, dict) else set()
-        # )
-        df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(
+        # Drop rows with empty dictionaries or invalid data
+        df_clean = df_clean[df_clean['Movie_countries'].apply(
+            lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
+        df_clean = df_clean[df_clean['Movie_languages'].apply(
+            lambda x: isinstance(x, dict) and len(x) > 0 if pd.notnull(x) else False)]
+        print("Empty dico bye bye")
+        
+        # Extract dictionary values into sets
+        print(df_clean)
+        df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
-        ).copy()
-        # df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
-        #     lambda x: set(x.values()) if isinstance(x, dict) else set()
-        # )
-        df_clean['Movie_languages'] = df_clean['Movie_countries'].apply(
+        )
+        df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_languages'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
-        ).copy()
-        print("Values from dico extracted successfully.")
+        )
 
+        print("Country and language columns cleaned successfully.")
         return df_clean
+
+    except KeyError as e:
+        print(f"KeyError: {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
 
