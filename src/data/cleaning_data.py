@@ -1,10 +1,6 @@
 # Some basic imports
-import os
 import pandas as pd
 import numpy as np
-import warnings
-import ast
-import re
 
 def load_df(path_df):
     """
@@ -40,7 +36,7 @@ def keep_info_of_interest(df_movie, df_character):
             "Movie_languages",
             "Movie_countries",
             "Movie_genres"
-        ]
+            ]
         df_movie.columns = new_column_names_m
 
         new_column_names_c = [
@@ -61,11 +57,11 @@ def keep_info_of_interest(df_movie, df_character):
         df_character.columns = new_column_names_c
         print("Columns name changed successfully.")
 
-        df_movie = df_movie['Wikipedia_movie_ID', 'Movie_name', 'Movie_release_date', "Movie_runtime", "Movie_languages", 'Movie_countries']
-        df_character = df_character['Wikipedia_movie_ID', 'Movie_release_date', 'Actor_ethnicity']
+        df_movie_selected = df_movie[['Wikipedia_movie_ID', 'Movie_name', 'Movie_release_date', "Movie_runtime", "Movie_languages", 'Movie_countries']]
+        df_character_selected = df_character[['Wikipedia_movie_ID', 'Movie_release_date', 'Actor_ethnicity']]
         print("Columns selected successfully.")
 
-        df_interest = pd.merge(df_character, df_movie, on=['Wikipedia_movie_ID', 'Movie_release_date'], how='inner')
+        df_interest = pd.merge(df_character_selected, df_movie_selected, on=['Wikipedia_movie_ID', 'Movie_release_date'], how='inner')
         print("DataFrame merged successfully.")
         return df_interest
     except Exception as e:
@@ -88,7 +84,7 @@ def rewrite_date(df_cleaned):
     Write the date in one single way.
     """
     try:
-        df_cleaned['Movie_release_date'] = df_cleaned['Movie_release_date'].astype(str).str[:4]
+        df_cleaned.loc[:,'Movie_release_date'] = df_cleaned['Movie_release_date'].astype(str).str[:4]
         print("Released Date column changed successfully.")
     except Exception as e:
         print(f"An error occurred while modifying the release date column: {e}")
@@ -153,7 +149,7 @@ def replace_longest_ethnicity_with_eurasian(df_cleaned):
         # Replace the longest ethnicity with 'Eurasian'
         df_cleaned['Actor_ethnicity'] = df_cleaned['Actor_ethnicity'].replace(longest_ethnicity, 'Eurasian')
 
-        print("Replacement complete. Updated DataFrame:")
+        print("Replacement complete.")
         return df_cleaned
 
     except Exception as e:
@@ -173,12 +169,18 @@ def country_language_dico_clean(df_clean):
         print("Empty dictionaries removed successfully.")
 
         # Extract only the country and language names
-        df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
+        # df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
+        #     lambda x: set(x.values()) if isinstance(x, dict) else set()
+        # )
+        df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
-        )
-        df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
+        ).copy()
+        # df_clean.loc[:, 'Movie_languages'] = df_clean['Movie_countries'].apply(
+        #     lambda x: set(x.values()) if isinstance(x, dict) else set()
+        # )
+        df_clean['Movie_languages'] = df_clean['Movie_countries'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
-        )
+        ).copy()
         print("Values from dico extracted successfully.")
 
         return df_clean
@@ -218,8 +220,6 @@ def main(
         # Drop rows with NaN values
         print("Dropping rows with NaN values...")
         df_cleaned = first_drop_nan(df_interest)
-
-        print(df_interest.head())
 
         # Standardize the release date format
         print("Rewriting release dates...")
