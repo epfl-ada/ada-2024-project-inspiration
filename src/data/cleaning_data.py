@@ -1,6 +1,7 @@
 # Some basic imports
 import pandas as pd
 import numpy as np
+import ast
 
 def load_df(path_df):
     """
@@ -198,6 +199,11 @@ def country_language_dico_clean(df_clean):
         if 'Movie_countries' not in df_clean.columns or 'Movie_languages' not in df_clean.columns:
             raise KeyError("Required columns 'Movie_countries' or 'Movie_languages' are missing.")
         print("Columns exist :)")
+        # PAS EMPTY --> print(df_clean)
+
+        # Convert strings to dictionaries
+        df_clean['Movie_countries'] = df_clean['Movie_countries'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+        df_clean['Movie_languages'] = df_clean['Movie_languages'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
 
         # Drop rows with empty dictionaries or invalid data
         df_clean = df_clean[df_clean['Movie_countries'].apply(
@@ -207,7 +213,7 @@ def country_language_dico_clean(df_clean):
         print("Empty dico bye bye")
         
         # Extract dictionary values into sets
-        print(df_clean)
+        # EMPTY --> print(df_clean)
         df_clean.loc[:, 'Movie_countries'] = df_clean['Movie_countries'].apply(
             lambda x: set(x.values()) if isinstance(x, dict) else set()
         )
