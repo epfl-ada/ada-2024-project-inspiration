@@ -48,3 +48,7 @@ def keep_info_of_interest(df_ratings, df_movie_names):
     except Exception as e:
         print(f"An error occurred while selecting and merging dfs: {e}")
 
+# def to add one the nominees
+
+
+
