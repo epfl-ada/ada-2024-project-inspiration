@@ -52,6 +52,7 @@ def box_office_setup(movie_metadata):
     """
     Get box office revenue from the given metadata.
     """
+    
     try:
         boxO = movie_metadata[['Movie_name', 'Movie_release_date', 'Movie_box_office_revenue']]
         print("Columns taken successfully.")
