@@ -81,13 +81,3 @@ def merge_on_movies(movies_df,actors_df):
     movies_final = pd.merge(movies_df,actors_df[['Wikipedia_movie_ID','diversity','actor_number']],on='Wikipedia_movie_ID', how='left')
     return movies_final
 
-actors_df = load_df('data/processed_data/clean_dataset.csv')
-actors_diversity = ethnic_groups(actors_df)
-check_nan_Ethnicity(actors_diversity)
-diversity = naive_diversity(actors_diversity)
-diversity = ethnic_entropy(actors_df,diversity)
-actors_df = merge_on_movies(actors_df,diversity)
-actors_df = actors_df[actors_df['actor_number'] != 1]
-actors_df = actors_df.drop(columns='Actor_ethnicity').drop_duplicates(subset='Wikipedia_movie_ID')
-print(actors_df)
-actors_df.to_csv("data/processed_data/clean_div_dataset.csv", index=False, encoding='utf-8-sig')
