@@ -51,7 +51,7 @@ def check_nan_Ethnicity(actors_df):
     actors_isnull = actors_df.isnull()
     nan_lines = actors_df[actors_df['ethnic_group'].isnull() == True]['Actor_ethnicity']
     nan_ethnicity = nan_lines.value_counts() # We don't have any NaN anymore
-    print(nan_ethnicity)
+    # print(nan_ethnicity)
     return 
 
 def naive_diversity(actors_df):
@@ -81,10 +81,3 @@ def merge_on_movies(movies_df,actors_df):
     movies_final = pd.merge(movies_df,actors_df[['Wikipedia_movie_ID','diversity','actor_number']],on='Wikipedia_movie_ID', how='left')
     return movies_final
 
-actors_df = load_df('data/processed_data/clean_dataset.csv')
-actors_diversity = ethnic_groups(actors_df)
-check_nan_Ethnicity(actors_diversity)
-diversity = naive_diversity(actors_diversity)
-diversity = ethnic_entropy(actors_df,diversity)
-actors_df = merge_on_movies(actors_df,diversity)
-print(actors_df)
