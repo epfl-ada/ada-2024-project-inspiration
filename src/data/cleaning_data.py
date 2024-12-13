@@ -57,14 +57,14 @@ def keep_info_of_interest(df_movie, df_character):
         ]
         df_character.columns = new_column_names_c
         # print("Columns name changed successfully.")
-
+        df_box_office = df_movie[['Movie_name', 'Movie_release_date', 'Movie_box_office_revenue']]
         df_movie_selected = df_movie[['Wikipedia_movie_ID', 'Movie_name', 'Movie_release_date', "Movie_runtime", "Movie_languages", 'Movie_countries']]
         df_character_selected = df_character[['Wikipedia_movie_ID', 'Movie_release_date', 'Actor_ethnicity']]
         # print("Columns selected successfully.")
 
         df_interest = pd.merge(df_character_selected, df_movie_selected, on=['Wikipedia_movie_ID', 'Movie_release_date'], how='inner')
         # print("DataFrame merged successfully.")
-        return df_interest
+        return df_interest, df_box_office
     except Exception as e:
         print(f"An error occurred while selecting and merging dfs: {e}")
 
@@ -220,13 +220,14 @@ def main(
         df_character = load_df(character_file_path)
 
         # Keep only information of interest
-        df_interest = keep_info_of_interest(df_movie, df_character)
+        df_interest, df_box_office = keep_info_of_interest(df_movie, df_character)
 
         # Drop rows with NaN values
         df_cleaned = first_drop_nan(df_interest)
 
         # Standardize the release date format
         df_cleaned = rewrite_date(df_cleaned)
+        df_box_office = rewrite_date(df_box_office)
 
         # Replace ethnicity codes with corresponding labels
         df_cleaned = replace_ethnicity_codes(df_cleaned, ethnicity_mapping_file_path)
@@ -242,10 +243,10 @@ def main(
 
         # print("Data processing completed successfully.")
         
-        df_cleaned = df_cleaned.applymap(lambda x: x.encode('utf-8', 'ignore').decode('utf-8') if isinstance(x, str) else x)
+        df_cleaned = df_cleaned.map(lambda x: x.encode('utf-8', 'ignore').decode('utf-8') if isinstance(x, str) else x)
         df_cleaned.to_csv("data/processed_data/clean_dataset.csv", index=False, encoding='utf-8-sig')
         print(f"Cleaned data saved to {'data/preprocess_data/clean_dataset.csv'}")
-        return df_cleaned
+        return df_cleaned, df_box_office
 
     except Exception as e:
         print(f"An error occurred during the data processing pipeline: {e}")
