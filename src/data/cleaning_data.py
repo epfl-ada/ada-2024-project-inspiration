@@ -57,7 +57,7 @@ def keep_info_of_interest(df_movie, df_character):
         ]
         df_character.columns = new_column_names_c
         # print("Columns name changed successfully.")
-        df_box_office = df_movie[['Movie_name', 'Movie_release_date', 'Movie_box_office_revenue']]
+        df_box_office = df_movie[['Wikipedia_movie_ID','Movie_name', 'Movie_release_date', 'Movie_box_office_revenue']]
         df_movie_selected = df_movie[['Wikipedia_movie_ID', 'Movie_name', 'Movie_release_date', "Movie_runtime", "Movie_languages", 'Movie_countries']]
         df_character_selected = df_character[['Wikipedia_movie_ID', 'Movie_release_date', 'Actor_ethnicity']]
         # print("Columns selected successfully.")
