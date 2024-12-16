@@ -81,6 +81,7 @@ def nominations_setup():
         filmfare = load_df_csv('data/processed_data/filmfare_nominees.csv')
         goldenP = load_df_csv('data/processed_data/golden_palms_nominees.csv')
         cesars = load_df_csv('data/processed_data/cesars_nominees.csv')
+        asian_films = load_df_csv('data/processed_data/asian_films_nominees.csv')
 
         # Set the nomination column to 1
         oscar['nomination'] = 1
@@ -88,7 +89,7 @@ def nominations_setup():
         filmfare['nomination'] = 1
         goldenP['nomination'] = 1
         cesars['nomination'] = 1
-        awards = pd.concat([oscar,cesars,goldenG,filmfare,goldenP],ignore_index=True)
+        awards = pd.concat([oscar,cesars,goldenG,filmfare,goldenP,asian_films],ignore_index=True)
         awards.drop_duplicates(subset=['Movie_name', 'Movie_release_date'], inplace=True)
         return awards
 
@@ -160,8 +161,8 @@ def define_success(df, ratings_quantile=0.75, box_office_quantile=0.75):
         df['Success'] = df['Success'].astype(int)
         # Print proportion of success movies
         number_successful_movies = df['Success'].sum()
-        proportion_success_movies=number_successful_movies/len(df) *100
-        print("Proportion of success movies:", proportion_success_movies)   
+        proportion_success_movies=number_successful_movies/len(df) * 100
+        print("Proportion of success movies:", proportion_success_movies.round(2), "%")  
         return df
     except Exception as e:
         print(f"An error occurred while defining success: {e}")

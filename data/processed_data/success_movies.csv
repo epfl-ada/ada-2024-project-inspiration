@@ -17805,7 +17805,7 @@ Loner,2008,5.2,20719359.0,412300.0,False,0
 Lonesome Cowboys,1968,5.2,3346127.0,,False,0
 Lonesome Jim,2005,6.5,5668860.0,174815.0,False,0
 Long Dark Night,2004,6.8,18355779.0,,False,0
-Long Day's Journey Into Night,1962,7.5,7803431.0,,True,1
+Long Day's Journey Into Night,1962,7.5,7803431.0,,False,1
 "Long Life, Happiness & Prosperity",2002,6.7,7048628.0,,False,0
 Long Live the Bride and Groom,1970,6.2,22370290.0,,False,0
 Long Lost Father,1934,5.8,17619948.0,,False,0
@@ -22526,7 +22526,7 @@ Paperback Hero,1999,6.4,11893853.0,,False,0
 Paperhouse,1988,6.6,8146734.0,,False,0
 Paperland: The Bureaucrat Observed,1979,7.1,14077973.0,,False,1
 Papi Gudia,1996,2.5,15462142.0,,False,0
-Papillon,1973,8.0,872386.0,53267000.0,False,1
+Papillon,1973,8.0,872386.0,53267000.0,True,1
 Papori,1986,7.4,26064103.0,,False,1
 Pappan Priyappetta Pappan,1986,6.9,18004401.0,,False,0
 Pappayude Swantham Appoos,1992,7.7,22469973.0,,False,1
@@ -28139,8 +28139,8 @@ Street Scenes,1970,6.6,4958346.0,,False,0
 Street Smart,1987,6.4,4681364.0,1119112.0,True,0
 Street Thief,2006,7.0,23541479.0,,False,0
 Street Trash,1987,5.9,2243157.0,,False,0
-Street of Chance,1930,6.4,12224576.0,,False,0
-Street of Chance,1942,6.3,3577967.0,,False,0
+Street of Chance,1930,6.4,12224576.0,,True,0
+Street of Chance,1942,6.3,3577967.0,,True,0
 Street of No Return,1989,5.6,26362462.0,,False,0
 Street of Shadows,1937,6.6,24320634.0,,False,0
 Street of Shame,1956,7.8,16156731.0,,False,1
@@ -31431,7 +31431,7 @@ The Fireball,1950,5.6,9652376.0,,False,0
 The Firechasers,1971,5.7,31320905.0,,False,0
 The Firefly,1937,6.8,19074682.0,1244000.0,False,0
 The Firemen of Viggiu,1949,5.9,18663788.0,,False,0
-The Firemen's Ball,1967,7.4,2667691.0,,False,1
+The Firemen's Ball,1967,7.4,2667691.0,,True,1
 The Firm,1993,6.9,287767.0,270248367.0,True,1
 The Firm,2009,5.8,24461292.0,,True,0
 The First $20 Million Is Always the Hardest,2002,5.5,357715.0,,False,0
@@ -39576,8 +39576,8 @@ White Christmas,1954,7.6,2817162.0,12000000.0,True,1
 White Corridors,1951,7.1,22751662.0,,False,1
 White Death,1936,5.4,32848882.0,,False,0
 White Deer Plain,2011,6.4,34789947.0,,False,0
-White Eagle,1922,5.0,15948971.0,,True,0
-White Eagle,1941,6.1,14143461.0,,True,0
+White Eagle,1922,5.0,15948971.0,,False,0
+White Eagle,1941,6.1,14143461.0,,False,0
 White Elephant,2012,6.5,35572763.0,,False,0
 White Fang,1991,6.7,1018216.0,34793160.0,False,0
 White Fang 2: Myth of the White Wolf,1994,5.4,10628498.0,8878839.0,False,0
