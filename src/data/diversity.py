@@ -83,6 +83,15 @@ def merge_on_movies(movies_df,actors_df):
     movies_final = pd.merge(movies_df,actors_df[['Wikipedia_movie_ID','diversity','actor_number']],on='Wikipedia_movie_ID', how='left')
     return movies_final
 
+def drop_solo_actors(df): 
+    """
+    Drops all the rows with a single actor to avoid bias for diversity score.
+    """
+    df = df.dropna(subset=['diversity'])
+    df = df[df["actor_number"] != 1]
+    df = df.drop(columns='Actor_ethnicity').drop_duplicates(subset='Wikipedia_movie_ID')
+    return df
+
 def piechart(df,column,Title):
     ethnicity_counts = df[column].value_counts().reset_index()
     ethnicity_counts.columns = [column,'count']

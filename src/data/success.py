@@ -89,6 +89,7 @@ def nominations_setup():
         filmfare['nomination'] = 1
         goldenP['nomination'] = 1
         cesars['nomination'] = 1
+        asian_films['nomination'] = 1
         awards = pd.concat([oscar,cesars,goldenG,filmfare,goldenP,asian_films],ignore_index=True)
         awards.drop_duplicates(subset=['Movie_name', 'Movie_release_date'], inplace=True)
         return awards
@@ -104,6 +105,7 @@ def merge_success_df(box_office_df, awards, ratings):
 
     try:
         box_office_df['Movie_release_date'] = box_office_df['Movie_release_date'].apply(str)
+        box_office_df['Wikipedia_movie_ID'] = box_office_df['Wikipedia_movie_ID'].astype(int)
         df = pd.merge(ratings, box_office_df, on=['Movie_name', 'Movie_release_date'], how='inner')
         df = pd.merge(df, awards, on=['Movie_name'], how='outer')
 
@@ -127,6 +129,7 @@ def merge_success_df(box_office_df, awards, ratings):
         ]
         success_movies.columns = column_names
         # in column nomination, we replace 1 by True, otherwise False
+        success_movies['Wikipedia_movie_ID'] = success_movies['Wikipedia_movie_ID'].astype(int)
         pd.set_option('future.no_silent_downcasting', True)
         success_movies['Nomination'] = success_movies['Nomination'].fillna(False)
         success_movies['Nomination'] = success_movies['Nomination'].replace(1.0,True)
@@ -154,7 +157,7 @@ def define_success(df, ratings_quantile=0.75, box_office_quantile=0.75):
     try:
         # Define the 3rd quartile for ratings and box office revenue
         ratings_3rd_quartile = df['Ratings'].quantile(ratings_quantile)
-        box_office_3rd_quartile = df['Movie_box_office_revenue'].quantile(ratings_quantile)
+        box_office_3rd_quartile = df['Movie_box_office_revenue'].quantile(box_office_quantile)
 
         # Define success based on the 3rd quartile for ratings and box office revenue
         df['Success'] = (df['Ratings'] > ratings_3rd_quartile) | (df['Nomination'] == 'True') | (df['Movie_box_office_revenue'] > box_office_3rd_quartile)
@@ -167,7 +170,7 @@ def define_success(df, ratings_quantile=0.75, box_office_quantile=0.75):
     except Exception as e:
         print(f"An error occurred while defining success: {e}")
 
-def save_success_df(df, csv_name):
+def save_df_to_csv(df, csv_name):
     """
     Save the success DataFrame with a specified name, concate its name and path.
     """
@@ -176,3 +179,28 @@ def save_success_df(df, csv_name):
         print("DataFrame saved successfully.")
     except Exception as e:
         print(f"An error occurred while saving the DataFrame: {e}")
+
+def merge_success_actors(success_df,actors_df):
+    """
+    Merge the success DataFrame with the actors DataFrame.
+    """
+    try:
+        actors_df['Movie_release_date'] = actors_df['Movie_release_date'].apply(str)
+        merge_on = ["Wikipedia_movie_ID", "Movie_name", "Movie_release_date"]
+        success_actors_df = pd.merge(success_df, actors_df, on=merge_on, how='inner')
+        # keep only the columns we need
+        column_names = [
+            "Movie_name",
+            "Movie_release_date",
+            "Ratings",
+            "Wikipedia_movie_ID",
+            "Movie_box_office_revenue",
+            "Nomination",
+            "diversity",
+            "actor_number",
+        ]
+        success_actors_df = success_actors_df[column_names]
+        # columns = ['Movie_name', 'Movie_release_date', 'Ratings', 'Wikipedia_movie_ID', 'Movie_box_office_revenue', 'Nomination', 'Success',
+        return success_actors_df
+    except Exception as e:
+        print(f"An error occurred while merging the success DataFrame with the actors DataFrame: {e}")
