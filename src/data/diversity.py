@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import plotly.io as pio
 #import matplotlib.pyplot as plt
 #import seaborn as sns
 
@@ -81,3 +83,43 @@ def merge_on_movies(movies_df,actors_df):
     movies_final = pd.merge(movies_df,actors_df[['Wikipedia_movie_ID','diversity','actor_number']],on='Wikipedia_movie_ID', how='left')
     return movies_final
 
+def piechart(df,column,Title):
+    ethnicity_counts = df[column].value_counts().reset_index()
+    ethnicity_counts.columns = [column,'count']
+    custom_colors = [
+    "#A01812",  # Rouge foncé
+    "#7A0A08",  # Rouge plus foncé
+    "#3A0605",  # Rouge plus plus foncé
+    "#6CA9B3",  # Bleu
+    "#3F6475",  # Bleu foncé
+    "#2A5563",  # Bleu plus foncé
+    "#204F61",  # Bleu plus foncé 2
+    "#284146",  # Bleu plus foncé 3
+    "#1A3040",  # Bleu plus plus foncé
+    "#FFF8D3",  # Beige très clair
+    "#FEF7D0",  # Beige clair
+    "#FFF3BC",  # Beige clair jaune
+    "#D8AC62",  # Beige
+    "#C48530",  # Beige +
+    "#B77526",  # Beige ++
+    "#8A3D0C",  # Marron
+    "#4C1508"   # Marron foncé
+    ]
+    fig = px.pie(ethnicity_counts, 
+             names=column, 
+             values='count', 
+             title=Title,
+             hover_name=column,
+             color_discrete_sequence=custom_colors, # Allows the ethnicity to appear when hovering
+             labels={column: column, 'Count': 'Number of Actors'})
+    fig.update_traces(textinfo='none')
+    return fig
+    
+# actors_df = load_df('data/processed_data/clean_dataset.csv')
+
+# figure_ethnicities = piechart(actors_df,'Actor_ethnicity','Ethnicities')
+# pio.write_html(figure_ethnicities, file="./tests/ethnicities_piechart.html", auto_open=False)
+
+# actors_diversity = ethnic_groups(actors_df)
+# figure_ethnic_group = piechart(actors_diversity,'ethnic_group', 'Ethnic Groups') 
+# pio.write_html(figure_ethnic_group, file="./tests/ethnic_groups_piechart.html", auto_open=False)
