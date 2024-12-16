@@ -3,7 +3,7 @@ This is a template repo for your project to help you organise and document your 
 Please use this structure for your project and document the installation, usage and structure as below.
 
 
-### How to use the library
+## How to use the library
 For our project pipeline, we used the given project template. We added 2 subdirectories to data : \raw_data with the uncleaned datasets and \processed_data with the 
 cleaned data sets
 
@@ -29,23 +29,23 @@ The directory structure of new project looks like this:
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
 │
-├── tests                       <- Tests of any kind
+├── tests                       <- plots for the data visualisation on website
 │
 ├── results.ipynb               <- a well-structured notebook showing the results
-│
+├── preliminary_results_P2.ipynb<- Notebook with preliminary results from milestone 2
 ├── .gitignore                  <- List of files ignored by git
 ├── pip_requirements.txt        <- File for installing python dependencies
 └── README.md
 ```
-### Detailed project proposal
+# Detailed project proposal from milestone 2
 
 **Is diversity a factor of success for films?** 
 
-# Abstract:
+## Abstract:
 
 The relationship between diversity in film casts and box office success is increasingly relevant in light of new industry standards and social awareness. However, the degree to which the cast diversity directly influences a film’s success remains unclear. In this work, we aim to explore whether films featuring diverse casts perform better financially and critically, examining data on film diversity, box office earnings, and awards from the perspective of the Academy’s 2024 Oscars diversity and inclusion standards. By doing so, we seek to gain insight into how diversity impacts industry success indicators, offering a data-driven narrative on whether representation positively correlates with audience and critical reception. This analysis could contribute to discussions on diversity's value not only as a social objective but also as a potential factor of commercial success, shaping a clearer understanding for filmmakers and industry stakeholders.
 
-1) # Research questions:
+## 1) Research questions:
 
 **Does diversity in the film cast correlate with a film’s success?**
 
@@ -58,9 +58,9 @@ The relationship between diversity in film casts and box office success is incre
   * Do films with diverse casts receive higher or lower ratings from audiences and critics?  
   * What is a high rate? 
 
-2) # Methods:
+## 2) Methods:
 
-## **TASK 1: Getting to know the data**
+### **TASK 1: Getting to know the data**
 
 **Clean the data:**   
 **1\)** remove missing value and non usable one :   
@@ -70,7 +70,7 @@ The relationship between diversity in film casts and box office success is incre
 **2\)** clean the value, we want all the column written in the format without value that are not understable or empty (like {})  
 **3\)** Create a final dataframe with all the informations about character and movie → merging on wiki\_id or on movie name in function of the step or what we want
 
-## **TASK 2: Data enrichment** 
+### **TASK 2: Data enrichment** 
 
 To conduct our analysis, we decided to import other databases: 
 
@@ -88,9 +88,9 @@ Database from worldwide acknowledged awards,
 
 All these datasets were cleaned and filtered before merging them to our original data.  
 
-## **TASK 3: Initial analysis**
+### **TASK 3: Initial analysis**
 
-1) **how can we define diversity and group ethnicities**
+#### 1) **how can we define diversity and group ethnicities**
 
 \-Define Major Groups: Use ChatGPT to determine the optimal number of major ethnic groups and create a clustering approach for grouping ethnicities accordingly.
 
@@ -98,7 +98,7 @@ All these datasets were cleaned and filtered before merging them to our original
 
 \-Second Analysis (Refined Approach): Assess the distribution of ethnicities within the film. For example, consider if ethnic representation is balanced (e.g., 50-50, 1/3-1/3-1/3). This balance score can then be used as a coefficient to adjust and refine the diversity percentage calculated in the first analysis.
 
-2) **Definition of a successful movie:** 
+#### 2) **Definition of a successful movie:** 
 
 We define a successful film based on three criteria: high box office revenue, high user ratings, or award nominations (including the Oscars, Golden Globes, Palme d'Or, Filmfare Awards, and Asian Film Awards).
 
@@ -112,17 +112,17 @@ To ensure a sufficient sample size of successful films, we think of setting thre
 
 Conclusion:  we have shown that our project is feasible 
 
-## **TASK 4: Analysis and plan to answer research questions (TBD in Milestone 3\)**
+### **TASK 4: Analysis and plan to answer research questions (TBD in Milestone 3\)**
 
 This section forms the core of our analysis, aiming to assess the correlation between cast diversity and film success. Specifically, we want to determine whether diversity is more prevalent in successful films or if no discernible pattern exists. We will analyze films categorized into two groups—successful and less successful—based on established success criteria.
 
-1) **Comparing Diversity Across Success Levels**
+#### 1) **Comparing Diversity Across Success Levels**
 
 \-Calculate the average diversity score for both successful and less successful films: average diversity in successful films and average diversity in less successful films. Examine the difference in diversity averages between the two groups.
 
 \-Significance Testing: Conduct a two-sided t-test (using stats.ttest\_ind) to evaluate if the diversity difference between successful and less successful films is statistically significant. The null hypothesis is that both groups have identical average diversity scores.
 
-2) **Assessing Correlation between Diversity and Success**
+#### 2) **Assessing Correlation between Diversity and Success**
 
 \-Correlation Analysis: Evaluate the dependency between diversity and film success using: Pearson correlation (stats.pearson) for linear associations.
 
@@ -130,20 +130,21 @@ This section forms the core of our analysis, aiming to assess the correlation be
 
 \-Regression Analysis: Investigate the association type (e.g., weak, negative, positive) through linear regression.
 
-3) **Measuring Uncertainty**
+#### 3) **Measuring Uncertainty**
 
 Quantify the uncertainty in our findings to strengthen the reliability of our results (confidence intervals, standards errors..)
 
 By conducting these analyses, we aim to uncover any meaningful relationship between diversity and success in films, providing insight into whether increased diversity contributes to or aligns with box office and critical achievements.
 
-**Proposed timeline:**
+
+## **Proposed timeline:**
 
 15.11.2024  Data Handling and Preprocessing & Initial Exploratory Data Analysis  
 29.11.2024 H2 Deadline/ Task 3 has to be finished.   
 13.12.2024 Task 4 has to be finished.   
 20.12.2024 tout mettre en commun/ désigner le site internet/ Milestone 3 deadline
 
-**Organization within the team:** 
+### **Organization within the team:** 
 
 A list of internal milestones up until project Milestone P3.  
 Mathilde:Statistic analysis   
@@ -152,8 +153,11 @@ Albane:Statistic analysis
 Flore: Statistic analysis   
 Francesco: Ethnicity: better definition of ethnic groups. and find a punchy project name
 
-**Question for TAs,** 
+### **Question for TAs** 
 
 - We have many very specific ethnicities and we want to have more general ethnicities. This is now done manually, but ideally we would like to use something like openai to automate this. Is this possible? And then do we have the ‘license’ or do we have a quota of questions asked, since we encountered some problems when trying to call openai directly from the script (it said the question quota was exhausted).
 
 - What percentage of successful films should we target as a threshold to ensure meaningful outputs in our analysis?
+
+
+# Milestone 3
