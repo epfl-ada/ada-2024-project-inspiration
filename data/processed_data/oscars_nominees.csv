@@ -1,4 +1,4 @@
-Movie_name,Movie_release_date
+﻿Movie_name,Movie_release_date
 Wings,1927
 7th Heaven,1927
 Sunrise: A Song of Two Humans,1927
@@ -67,6 +67,7 @@ Raffles,1930
 Sally,1929
 Sarah and Son,1930
 Song of the Flame,1930
+Street of Chance,1930
 The Big Pond,1930
 The Case of Sergeant Grischa,1930
 The Devil's Holiday,1930
@@ -588,7 +589,6 @@ Rhythm in the Ranks,1941
 Ridin' on a Rainbow,1941
 Russian Soil,1941
 Sagebrush and Silver,1941
-Sis Hopkins,1941
 Skylark,1941
 So Ends Our Night,1941
 Soldiers of the Sky,1941
@@ -671,6 +671,7 @@ Hellzapoppin',1942
 High Over the Borders,1942
 High Stakes in the East,1942
 I Married a Witch,1942
+In Which We Serve,1942
 Inside Fighting China,1942
 Invisible Agent,1942
 It Started with Eve,1942
@@ -707,7 +708,7 @@ Tulips Shall Grow,1942
 Twenty-One Miles,1942
 United States Marine Band,1942
 We Refuse to Die,1942
-White Eagle,1942
+The White Eagle,1942
 Winning Your Wings,1942
 Youth on Parade,1942
 Casablanca,1943
@@ -722,7 +723,7 @@ This Is the Army,1943
 "Hello, Frisco, Hello",1943
 Amphibious Fighters,1943
 Crash Dive,1943
-December 7th: The Movie,1943
+December 7: The Movie,1943
 Desert Victory,1943
 Heavenly Music,1943
 Princess O'Rourke,1943
@@ -739,7 +740,6 @@ Thousands Cheer,1943
 Hangmen Also Die!,1943
 Hit Parade of 1943,1943
 In Old Oklahoma,1943
-In Which We Serve,1943
 Something to Shout About,1943
 Stage Door Canteen,1943
 Star Spangled Rhythm,1943
@@ -792,7 +792,7 @@ To the People of the United States,1943
 Tomorrow We Fly,1943
 Victory Through Air Power,1943
 War Department Report,1943
-Woman at War,1943
+Women at War,1943
 Youth in Crisis,1943
 Going My Way,1944
 Wilson,1944
@@ -830,7 +830,7 @@ Up in Arms,1944
 Voice in the Wind,1944
 A Guy Named Joe,1944
 And to Think I Saw It on Mulberry Street,1944
-Blue Grass Gentleman,1944
+Blue Grass Gentlemen,1944
 Bombalera,1944
 Christmas Holiday,1944
 Days of Glory,1944
@@ -1105,7 +1105,7 @@ Annie Was a Wonder,1948
 B.F.'s Daughter,1948
 Calgary Stampede,1948
 Casbah,1948
-Cinderella Horses,1948
+Cinderella Horse,1948
 Deep Waters,1948
 Going to Blazes,1948
 Green Grass of Wyoming,1948
@@ -1250,7 +1250,6 @@ A Streetcar Named Desire,1951
 The African Queen,1951
 The Great Caruso,1951
 Here Comes the Groom,1951
-When Worlds Collide,1951
 Benjy,1951
 Kon-Tiki,1951
 Nature's Half Acre,1951
@@ -1887,7 +1886,7 @@ Icarus Montgolfier Wright,1962
 Keeper of Promises,1962
 Last Year at Marienbad,1962
 Lolita,1962
-Long Day's Journey Into Night,1962
+Long Day's Journey into Night,1962
 My Geisha,1962
 Now Hear This,1962
 Pan,1962
@@ -2206,7 +2205,7 @@ Prelude,1968
 Stolen Kisses,1968
 The Boys of Paul Street,1968
 The Dove,1968
-The Fireman's Ball,1968
+The Firemen's Ball,1968
 The Fixer,1968
 The Fox,1968
 The Girl with the Pistol,1968
@@ -2443,7 +2442,7 @@ Life Times Nine,1973
 Live and Let Die,1973
 Ludwig,1973
 Paisti ag obair,1973
-Papillion,1973
+Papillon,1973
 Pulcinella,1973
 Robin Hood,1973
 The Day of the Jackal,1973
@@ -2644,7 +2643,7 @@ Operation Thunderbolt,1977
 Saturday Night Fever,1977
 Smokey and the Bandit,1977
 Sorcerer,1977
-Spacebone,1977
+Spaceborne,1977
 The Absent-Minded Waiter,1977
 The Children of Theatre Street,1977
 The Deep,1977
@@ -3271,7 +3270,7 @@ Hamlet,1990
 Home Alone,1990
 Postcards from the Edge,1990
 Total Recall,1990
-12:01 PM,1990
+12:01 pm,1990
 A Grand Day Out,1990
 Alice,1990
 Berkeley in the Sixties,1990

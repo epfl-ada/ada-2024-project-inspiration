@@ -26,7 +26,7 @@ oscars_awards_df.columns= ['Movie_name', 'Movie_release_date']
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r'..\..\data\processed_data\oscars_nominees.csv'
 save_path = r'data\processed_data\oscars_nominees.csv'
-oscars_awards_df.to_csv(save_path,index=False)
+oscars_awards_df.to_csv(save_path,index=False, encoding='utf-8-sig')
 
 
 """
@@ -51,7 +51,7 @@ golden_globe_awards_df.columns= ['Movie_name', 'Movie_release_date']
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r'..\..\data\processed_data\golden_globes_nominees.csv'
 save_path = r'data\processed_data\golden_globes_nominees.csv'
-golden_globe_awards_df.to_csv(save_path,index=False)
+golden_globe_awards_df.to_csv(save_path,index=False, encoding='utf-8-sig')
 
 """
 --------------------------------------------------------- """
@@ -74,7 +74,7 @@ cesar_awards_df.columns= ['Movie_name', 'Movie_release_date']
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r'..\..\data\processed_data\cesars_nominees.csv'
 save_path = r'data\processed_data\cesars_nominees.csv'
-cesar_awards_df.to_csv(save_path,index=False)
+cesar_awards_df.to_csv(save_path,index=False, encoding='utf-8-sig')
 
 
 """
@@ -99,7 +99,7 @@ asian_film_awards_df.columns= ['Movie_name', 'Movie_release_date']
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r'..\..\data\processed_data\asian_films_nominees.csv'
 save_path = r'data\processed_data\asian_films_nominees.csv'
-asian_film_awards_df.to_csv(save_path,index=False)
+asian_film_awards_df.to_csv(save_path,index=False, encoding='utf-8-sig')
 
 """
 --------------------------------------------------------- """
@@ -124,7 +124,7 @@ filmfare_award_df.columns= ['Movie_name', 'Movie_release_date']
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r"..\..\data\processed_data\filmfare_nominees.csv"
 save_path = r"data\processed_data\filmfare_nominees.csv" # r as a raw string to avoir\f counted as an operation
-filmfare_award_df.to_csv(save_path,index=False)
+filmfare_award_df.to_csv(save_path,index=False, encoding='utf-8-sig')
 
 """
 --------------------------------------------------------- """
@@ -156,4 +156,4 @@ golden_palm_awards_df['Movie_name'] = golden_palm_awards_df['Movie_name'].apply(
 # Save the dataframe as a csv file in \processed_data directory
 # save_path = r'..\..\data\processed_data\golden_palms_nominees.csv'
 save_path = r'data\processed_data\golden_palms_nominees.csv'
-golden_palm_awards_df.to_csv(save_path,index=False)
+golden_palm_awards_df.to_csv(save_path,index=False, encoding='utf-8-sig')
