@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import plotly.io as pio
 #import matplotlib.pyplot as plt
 #import seaborn as sns
 
@@ -34,7 +36,7 @@ def ethnic_groups(actors_df):
       'Southern European': ['Italians', 'Spaniards', 'Greeks', 'names of the Greeks', 'Dalmatian Italians', 'Catalan people', 'Greeks in South Africa',  'Greeks in the United Kingdom', 'Romani people in Spain', 'Greek Cypriots', 'Italians in the United Kingdom', 'Gibraltarian people', 'Basque people'],
       'Indigenous peoples of the Americas': ['Omaha people', 'Cherokee', 'Native Hawaiians', 'First Nations', 'Mohawk people', 'Inuit', 'Sioux', 'Lumbee', 'Cree', 'Apache', 'Haudenosaunee', 'Inupiat people', 'Cheyennes', 'Dene', 'Aymara', 'Oneida', 'Blackfoot Confederacy', 'Ojibwe', 'Indo-Canadians', 'Choctaw', 'Quebeckers', 'Ho-Chunk', 'Nez Perce'],
       'Oceania and Pacific Islander': ['Pacific Islander Americans', 'Samoan New Zealanders', 'Māori', 'Kiwi', 'Greek Australians', 'Australian Americans', 'Italian Australian','Australian Americans','Anglo-Celtic Australians', 'Swedish Australian', 'English Australian', 'Australians', 'Scottish Australian', 'Dutch Australian', 'Irish Australian', 'Croatian Australians', 'Polish Australians', 'Serbian Australians','Indian Australian'],
-      'Mixed Ethnicities/Global Diaspora': ['Eurasian','freebase_id\n/m/017sq0    Eurasian\n/m/017sq0     Eurasia\nName: label, dtype: object','multiracial people', 'Afro-Asians', 'Métis', 'Asian Americans', 'Taiwanese Americans', 'Japanese Brazilians', 'White Africans of European ancestry', 'African Americans', 'British Pakistanis', 'Iranians in the United Kingdom', 'Black Britons', 'British Chinese', 'Anglo-Indian people', 'Brazilian Americans', 'History of the Jews in India','history of the Jews in India','Afro-Cuban','Vietnamese Americans','British Asian','Iranian Americans'],
+      'Mixed Ethnicities/Global Diaspora': ['Eurasian','multiracial people', 'Afro-Asians', 'Métis', 'Asian Americans', 'Taiwanese Americans', 'Japanese Brazilians', 'White Africans of European ancestry', 'African Americans', 'British Pakistanis', 'Iranians in the United Kingdom', 'Black Britons', 'British Chinese', 'Anglo-Indian people', 'Brazilian Americans', 'History of the Jews in India','history of the Jews in India','Afro-Cuban','Vietnamese Americans','British Asian','Iranian Americans'],
       'Hispanic': ['Puerto Ricans', 'Spanish Americans', 'Cuban Americans', 'Mexican Americans', 'Stateside Puerto Ricans', 'Dominican Americans', 'Mexican Americans', 'Hispanic', 'Tejano', 'Spanish immigration to Mexico', 'Italian immigration to Mexico','Cuban Americans', 'Cubans', 'Mexican Americans', 'Bolivian American', 'Uruguayans', 'Mexicans', 'Argentines', 'Brazilians', 'Ecuadorian Americans', 'White Latin American', 'Hondurans', 'Venezuelans', 'Honduran Americans', 'Colombians', 'Chileans', 'Chileans in the United Kingdom', 'Salvadoran Americans','Venezuelan Americans', 'Latino', 'Panamanian Americans','Colombian Americans','Que viva el amor de Chaves',],
       'Caribbean': ['Haitian Americans', 'Bahamian Americans', 'Louisiana Creole people', 'British African-Caribbean people'],
     }
@@ -81,3 +83,45 @@ def merge_on_movies(movies_df,actors_df):
     movies_final = pd.merge(movies_df,actors_df[['Wikipedia_movie_ID','diversity','actor_number']],on='Wikipedia_movie_ID', how='left')
     return movies_final
 
+def piechart(df,column,Title):
+    ethnicity_counts = df[column].value_counts().reset_index()
+    ethnicity_counts.columns = [column,'count']
+    custom_colors = [
+    "#A01812",  # Rouge foncé
+    "#7A0A08",  # Rouge plus foncé
+    "#3A0605",  # Rouge plus plus foncé
+    "#6CA9B3",  # Bleu
+    "#3F6475",  # Bleu foncé
+    "#2A5563",  # Bleu plus foncé
+    "#204F61",  # Bleu plus foncé 2
+    "#284146",  # Bleu plus foncé 3
+    "#1A3040",  # Bleu plus plus foncé
+    # "#FFF8D3",  # Beige très clair
+    "#FEF7D0",  # Beige clair
+    "#FFF3BC",  # Beige clair jaune
+    "#D8AC62",  # Beige
+    "#C48530",  # Beige +
+    "#B77526",  # Beige ++
+    "#8A3D0C",  # Marron
+    "#4C1508"   # Marron foncé
+    ]
+    fig = px.pie(ethnicity_counts, 
+             names=column, 
+             values='count', 
+             title=Title,
+             hover_name=column,
+             color_discrete_sequence=custom_colors, # Allows the ethnicity to appear when hovering
+             labels={column: column, 'Count': 'Number of Actors'})
+    fig.update_traces(textinfo='none')
+    fig.update_layout(paper_bgcolor="#FFF8D3")
+    fig.show()
+    return fig
+    
+actors_df = load_df('data/processed_data/clean_dataset.csv')
+
+figure_ethnicities = piechart(actors_df,'Actor_ethnicity','Ethnicities')
+pio.write_html(figure_ethnicities, file="./tests/ethnicities_piechart.html", auto_open=False)
+
+# actors_diversity = ethnic_groups(actors_df)
+# figure_ethnic_group = piechart(actors_diversity,'ethnic_group', 'Ethnic Groups') 
+# pio.write_html(figure_ethnic_group, file="./tests/ethnic_groups_piechart.html", auto_open=False)
