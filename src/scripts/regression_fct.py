@@ -38,6 +38,9 @@ def regression(df, features, target):
         'y_pred': y_pred
     })
     results_df = pd.concat([results_df, X_test], axis=1)
+    if model.rsquared < 0.1:
+        print('WARNING: R-squared is below 0.1')
+        print('R-squared:', model.rsquared)
     
     return results_df, model
 

@@ -51,7 +51,7 @@ def check_nan_Ethnicity(actors_df):
     actors_isnull = actors_df.isnull()
     nan_lines = actors_df[actors_df['ethnic_group'].isnull() == True]['Actor_ethnicity']
     nan_ethnicity = nan_lines.value_counts() # We don't have any NaN anymore
-    print(nan_ethnicity)
+    # print(nan_ethnicity)
     return 
 
 def naive_diversity(actors_df):
