@@ -171,3 +171,166 @@ def plot_trend_line(df,color_diversity,color_trend,title,html_output):
     # Show the interactive plot
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
+
+def get_subset_box_office(df):
+    """
+    Get a subset of the box office data for the analysis.
+    """
+    # Filter the data for the years between 1960 and 2023
+    subset_box_office = df.dropna(subset=['Movie_box_office_revenue'])
+    return subset_box_office
+
+def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, title, html_output):
+    """
+    Plot an interactive bar plot with the specified categories and diversity scores.
+    """
+    # Create the figure
+    fig = go.Figure()
+    colors = color_palette(color_high) + color_palette(color_low)
+    # Add the bar plot for high diversity
+    fig.add_trace(go.Bar(
+        x=categorie, y=diversity,
+        name=name,
+        marker=dict(color=colors)
+    ))
+
+    # Customize the layout
+    fig.update_layout(
+        title=title,
+        barmode='group',
+        xaxis_title="Categories",
+        yaxis_title="Average Diversity",
+        xaxis_tickangle=-30,
+        showlegend=True
+    )
+
+    # Set the background color
+    set_background_color(fig)
+    # Show the interactive plot
+    fig.write_html(f'tests/{html_output}.html')
+    fig.show()
+
+
+def mean_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
+    """
+    Calculate the average diversity score for success parameters:
+    - Overall success
+    - Nominations movies
+    - Ratings
+    - Box office revenue
+    """
+
+    # Define the threshold for ratings and box office revenue
+    ratings_threshold = df['Ratings'].quantile(ratings_quantile)
+    box_office_threshold = df['Movie_box_office_revenue'].quantile(box_office_quantile)
+
+    # Calculate the average diversity score for different success parameters
+    # Average diversity for overall success movies
+    avg_diversity_overall_0 = df.loc[df['Success'] == False]['diversity'].mean()
+    avg_diversity_overall_1 = df.loc[df['Success'] == True]['diversity'].mean()
+
+    # Average diversity for film nominated / un-nominated
+    avg_diversity_nominated_0 = df.loc[df['Nomination'] == False]['diversity'].mean()
+    avg_diversity_nominated_1 = df.loc[df['Nomination'] == True]['diversity'].mean()
+    
+    # Average diversity for film with high ratings / low ratings
+    diversite_ratings_0 = df.loc[df['Ratings'] <= ratings_threshold]['diversity'].mean()
+    diversite_ratings_1 = df.loc[df['Ratings'] > ratings_threshold]['diversity'].mean()
+
+    # Define the subset box office data: 
+    subset_box_office = get_subset_box_office(df)
+
+    # Average diversity for film with high box office revenue / low box office revenue
+    avg_diversity_box_office_0 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] <= box_office_threshold]['diversity'].mean()
+    avg_diversity_box_office_1 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] > box_office_threshold]['diversity'].mean()
+
+    # # Print the results on overall success
+    # print(f"Average diversity for film successful: {avg_diversity_overall_1:.4f}")
+    # print(f"Average diversity for film less successful: {avg_diversity_overall_0:.4f}")
+    # # Print the results on nomination
+    # print(f"Average diversity for film nominated: {avg_diversity_nominated_1:.4f}")
+    # print(f"Average diversity for film not nominated: {avg_diversity_nominated_0:.4f}")
+    # # Print the results on ratings
+    # print(f"Average diversity for film with high ratings: {diversite_ratings_1:.4f}")
+    # print(f"Average diversity for film with lower ratings: {diversite_ratings_0:.4f}")
+    # # Print the results on box office revenue
+    # print(f"Average diversity for film with high box office revenue: {avg_diversity_box_office_1:.4f}")
+    # print(f"Average diversity for film with lower box office revenue: {avg_diversity_box_office_0:.4f}")
+    
+
+    # Prepare data for interactive bar plots
+    # Define the categories and average diversity scores on overall success
+    categories_success = ['Successful', 'Not Successful']
+    diversity_success = [avg_diversity_overall_1, avg_diversity_overall_0]
+
+    # Define the categories and average diversity scores on nominations
+    categories_nomination = ['Nominated', 'Not Nominated']
+    diversity_nomination = [avg_diversity_nominated_1, avg_diversity_nominated_0]
+
+    # Define the categories and average diversity scores on ratings
+    categories_ratings = ['High Ratings', 'Low Ratings']
+    diversity_ratings = [diversite_ratings_1, diversite_ratings_0]
+
+    # define the categories and average diversity scores on box office revenue
+    categories_box_office = ['High Box Office Revenue', 'Low Box Office Revenue']
+    diversity_box_office = [avg_diversity_box_office_1, avg_diversity_box_office_0]
+
+    color_high = 'beige_plus_plus'
+    color_low = 'dark_red'
+    # Plot the bar plots for each criteria
+    # Plot overall success
+    plot_interactive_bar_plot(categories_success, diversity_success,
+                              'Success', color_high, color_low,
+                              'Average Diversity on overall Success', 'diversity_success')
+    # Plot nominations
+    plot_interactive_bar_plot(categories_nomination, diversity_nomination,
+                              'Nomination', color_high, color_low,
+                              'Average Diversity by Nomination', 'diversity_nomination')
+    
+    # Plot ratings
+    plot_interactive_bar_plot(categories_ratings, diversity_ratings,
+                              'Ratings', color_high, color_low,
+                              'Average Diversity by Ratings', 'diversity_ratings')
+    # Plot box office revenue
+    plot_interactive_bar_plot(categories_box_office, diversity_box_office,
+                                'Movie_box_office_revenue', color_high, color_low,
+                                'Average Diversity by Box Office Revenue', 'diversity_box_office')
+
+    # # Create the interactive bar plots
+    # fig = go.Figure()
+
+    # # Plot for Nomination
+    # fig.add_trace(go.Bar(
+    #     x=categories_nomination, y=diversity_nomination,
+    #     name='Nomination',
+    #     marker=dict(color=['#B77526', '#A01812'])
+    # ))
+
+    # # Plot for Ratings
+    # fig.add_trace(go.Bar(
+    #     x=categories_ratings, y=diversity_ratings,
+    #     name='Ratings',
+    #     marker=dict(color=['#B77526', '#A01812']),
+    
+    # ))
+
+    # # Plot for Success
+    # fig.add_trace(go.Bar(
+    #     x=categories_success, y=diversity_success,
+    #     name='Success',
+    #     marker=dict(color=['#B77526', '#A01812']),
+    
+    # ))
+
+    # # Update layout for better appearance
+    # fig.update_layout(
+    #     title="Diversity Analysis by Different Factors",
+    #     barmode='group',
+    #     xaxis_title="Categories",
+    #     yaxis_title="Average Diversity",
+    #     xaxis_tickangle=-30,
+    #     showlegend=True
+    # )
+
+    # # Show the interactive plot
+    # fig.show()
