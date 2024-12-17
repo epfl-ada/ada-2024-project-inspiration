@@ -49,11 +49,11 @@ def color_palette(color):
     color = colors_df[colors_df['name'] == color]['hex'].values[0]
     return [color]
     
-def background_color(fig):
+def set_background_color(fig):
     """
     Set the background color of the plotly figure.
     """
-    fig.update_layout(paper_bgcolor=background_color)
+    fig.update_layout(paper_bgcolor=background_color[0])
 
 def plot_histogram(variable,parameter,color,title, html_output):
     """
@@ -62,52 +62,112 @@ def plot_histogram(variable,parameter,color,title, html_output):
     """
     fig = px.histogram(variable, x= parameter, title=title, color_discrete_sequence=color)
     fig.update_layout(paper_bgcolor="#FFF8D3") # website background color
-    fig.write_html(html_output)
+    # save it in html in test folder
+    fig.write_html(f'tests/{html_output}.html')
     fig.show()
 
-def plot_evolution_basic(dataframe):
-    """
-    Plot the evolution of the average diversity score over the years.
-    """
-    diversity_by_year = dataframe.groupby(dataframe['Movie_release_date']).apply(lambda x: pd.Series({
-        'average_diversity': x['diversity'].mean(),
-        'std_diversity': x['diversity'].std()
-    }))	
-
-    plt.plot(diversity_by_year.index, diversity_by_year.average_diversity)
-    plt.title('Average diversity score')
-    plt.xlabel('Year')
-    plt.ylabel('Diversity Score')
-    plt.legend()
-    plt.show()
-
-def plot_evolution(dataframe):
+def plot_evolution(dataframe,color,title,html_output):
     diversity_by_year = dataframe.groupby(dataframe['Movie_release_date']).apply(lambda x: pd.Series({
         'average_diversity': x['diversity'].mean(),
         'std_diversity': x['diversity'].std()
     }))
 
     fig = go.Figure()
+    fig.update_layout(width=1000, height=600)
     fig.add_trace(go.Scatter(
         x=diversity_by_year.index,
         y=diversity_by_year.average_diversity,
         mode='lines+markers',
         name='Average Diversity',
-        line=dict(color='#A01812'),
+        line=dict(color=color[0]),
         marker=dict(size=8)
     ))
-
+    # Format x-axis to show decades
+    fig.update_xaxes(
+        ticktext=['1920s','1930s', '1940s', '1950s', '1960s', '1970s', '1980s', '1990s', '2000s', '2010s', '2020s'],
+        tickvals=[1920,1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020],
+        dtick=10
+    )
     # Add a title and axis labels
     fig.update_layout(
-        title="Evolution of the diversity score overtime for the reduced dataset",
+        title=title,
         xaxis_title="Year",
         yaxis_title="Diversity Score",
         legend_title="Metrics",
-        template="plotly_white"
+        template="plotly_white",
+        width=1000, height=600
+        # paper_bgcolor=background_color[0]
     )
     # Set the background color
-    background_color(fig)
-    # save it in html for the website
-    fig.write_html("evolution_overtime.html")
+    set_background_color(fig)
     # Show the interactive plot
+    fig.show()
+    # save it in html for the website
+    fig.write_html(f'tests/{html_output}.html')
+
+
+def plot_movie_release_date(df,color,title,html_output):
+    """
+    Plot the number of movies released per year. and save it in html format.
+    """
+    # Sort df by year
+    df['Movie_release_date'] = df['Movie_release_date'].astype(int)
+    fig = px.histogram(df['Movie_release_date'], x="Movie_release_date",color_discrete_sequence=color,title=title)
+    fig.update_xaxes(title_text="Movie release date")
+    fig.update_yaxes(title_text="Number of movies")
+    fig.update_layout(width=1000, height=600)
+    set_background_color(fig)
+    fig.write_html(f'tests/{html_output}.html') # save it in html in test folder
+    fig.show()
+    #reset df type as int
+
+def plot_trend_line(df,color_diversity,color_trend,title,html_output):
+    """
+    Plot the average diversity score per year with a trend line.
+    """
+    # Filter the data for the years between 1960 and 2023
+    filtered_df = df[df['Movie_release_date'].between(1960, 2023)]
+    
+    diversity_by_year = filtered_df.groupby(filtered_df['Movie_release_date']).apply(
+        lambda x: pd.Series({'average_diversity': x['diversity'].mean()})
+    ).reset_index()
+    # Linear regression (trend line)
+    z = np.polyfit(diversity_by_year['Movie_release_date'], diversity_by_year['average_diversity'], 1)
+    p = np.poly1d(z)
+    
+    # Create the figure
+    fig = go.Figure()
+
+    # Add line for average diversity score
+    fig.add_trace(go.Scatter(
+        x=diversity_by_year['Movie_release_date'],
+        y=diversity_by_year['average_diversity'],
+        mode='lines+markers',
+        name='Average Diversity',
+        line=dict(color=color_diversity[0]),
+        marker=dict(size=8, color=color_diversity[0])
+    ))
+
+    # Add trend line
+    fig.add_trace(go.Scatter(
+        x=diversity_by_year['Movie_release_date'],
+        y=p(diversity_by_year['Movie_release_date']),
+        mode='lines',
+        name='Trend Line',
+        line=dict(color=color_trend[0], dash='dash')
+    ))
+
+    # Customize the layout
+    fig.update_layout(
+        title=title,
+        xaxis_title="Year",
+        yaxis_title="Diversity Score",
+        template="plotly_white",
+        legend_title="Metrics"
+    )
+
+    # Set the background color
+    set_background_color(fig)
+    # Show the interactive plot
+    fig.write_html(f'tests/{html_output}.html')
     fig.show()
