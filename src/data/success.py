@@ -155,12 +155,12 @@ def define_success(df, ratings_quantile=0.75, box_office_quantile=0.75):
     We take the movies with ratings and box office on the 3rd quartile and nominations.
     """
     try:
-        # Define the 3rd quartile for ratings and box office revenue
-        ratings_3rd_quartile = df['Ratings'].quantile(ratings_quantile)
-        box_office_3rd_quartile = df['Movie_box_office_revenue'].quantile(box_office_quantile)
+        # Define the threshold for ratings and box office revenue
+        ratings_threshold = df['Ratings'].quantile(ratings_quantile)
+        box_office_threshold = df['Movie_box_office_revenue'].quantile(box_office_quantile)
 
         # Define success based on the 3rd quartile for ratings and box office revenue
-        df['Success'] = (df['Ratings'] > ratings_3rd_quartile) | (df['Nomination'] == 'True') | (df['Movie_box_office_revenue'] > box_office_3rd_quartile)
+        df['Success'] = (df['Ratings'] > ratings_threshold) | (df['Nomination'] == 'True') | (df['Movie_box_office_revenue'] > box_office_threshold)
         df['Success'] = df['Success'].astype(int)
         # Print proportion of success movies
         number_successful_movies = df['Success'].sum()
@@ -199,6 +199,7 @@ def merge_success_actors(success_df,actors_df):
             "Movie_languages",
             "Nomination",
             "diversity",
+            "Success",
             "actor_number",
         ]
         success_actors_df = success_actors_df[column_names]
