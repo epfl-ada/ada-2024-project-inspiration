@@ -61,52 +61,27 @@ def naive_diversity(actors_df):
     mov_div['naive_diversity']=mov_div['ethnicity_number']/mov_div['actor_number']
     return mov_div
 
-def ethnic_entropy(actors_df,mov_div,type = 'naive*entropy',normalized = 1):
+def ethnic_entropy(actors_df,mov_div,type = '*'):
     ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')
-    # tot_actors = mov_div[['Wikipedia_movie_ID','actor_number']]
-    ethn_count['proportion'] = ethn_count['num_actors']/mov_div['actor_number']
+    ethn_count = ethn_count.merge(mov_div[['Wikipedia_movie_ID','actor_number']], on='Wikipedia_movie_ID', how='left')
+    ethn_count['proportion'] = ethn_count['num_actors']/ethn_count['actor_number']
     ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])
     mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)
     entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()
     diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')
-    print()
-    # if normalized == 1:
-    #     ethn_count['proportion'] = ethn_count['num_actors']/tot_actors
-    #     ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])
-    #     entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()
-    #     # Normalize entropy
-       
-    #     max_entropy['entropy'] = np.log(len(actors_df['ethnic_group'].unique())) # Maximum possible entropy
-       
-    #     entropy_by_movie['entropy'] = entropy_by_movie['entropy'] / max_entropy
-        
-    # elif normalized == 2:
-    #     ethn_count['proportion'] = ethn_count['num_actors']/mov_div['actor_number']
-    #     ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])
-    #     mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)
-    #     # max_entropy['Wikipedia_movie_ID'] = ethn_count['Wikipedia_movie_ID']
-    #     # max_entropy['num_actors'] = tot_actors
-    #     # max_entropy_fin = max_entropy.groupby('Wikipedia_movie_ID')['entropy'].agg('sum').reset_index(name='max_entropy')
-    #     entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()
-    #     diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')
-    #     # entropy_by_movie['entropy'] = entropy_by_movie['entropy'] / max_entropy
-    #     print('1')
-    #     print(tot_actors)
-    #     print('2')
-    #     print(entropy_by_movie)
-    #     print('3')
-    #     print(mov_div)
-    #     print('4')
-    #     print(diversity_final)
-        # print(max_entropy_fin)
-    # merge everything back together
-    # diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')
+    diversity_final.to_csv('div_test.csv')
     if type == 'naive':
         diversity_final['diversity'] = diversity_final['naive_diversity']
     elif type == 'entropy': 
         diversity_final['diversity'] = diversity_final['entropy']
-    elif type == 'naive*entropy':
-        diversity_final['diversity']= diversity_final['naive_diversity']*diversity_final['entropy']        
+    elif type == 'entropy_norm':
+        diversity_final['diversity'] = diversity_final['entropy']/diversity_final['max_entropy']
+    elif type == '*':
+        diversity_final['diversity']= diversity_final['naive_diversity']*diversity_final['entropy']
+    elif type == '*norm':
+        diversity_final['diversity']=diversity_final['naive_diversity']*diversity_final['entropy']/diversity_final['max_entropy'] 
+    elif type == '+norm':
+        diversity_final['diversity'] = diversity_final['diversity']=diversity_final['naive_diversity'] + diversity_final['entropy']/diversity_final['max_entropy'] 
     return diversity_final
 
 def merge_on_movies(movies_df,actors_df):
@@ -162,7 +137,7 @@ actors_df = load_df('data/processed_data/clean_dataset.csv')
 actors_diversity = ethnic_groups(actors_df)
 check_nan_Ethnicity(actors_diversity)
 diversity = naive_diversity(actors_diversity)
-diversity = ethnic_entropy(actors_df,diversity,'naive*entropy',2)
+diversity = ethnic_entropy(actors_df,diversity,'+norm')
 diversity.to_csv('test_div.csv')
 actors_df = merge_on_movies(actors_df,diversity)
 actors_df = drop_solo_actors(actors_df)
