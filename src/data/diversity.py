@@ -125,11 +125,13 @@ def piechart(df,column,Title):
     fig.update_layout(paper_bgcolor="#FFF8D3")
     fig.show()
     return fig
-    
-actors_df = load_df('data/processed_data/clean_dataset.csv')
 
-figure_ethnicities = piechart(actors_df,'Actor_ethnicity','Ethnicities')
-pio.write_html(figure_ethnicities, file="./tests/ethnicities_piechart.html", auto_open=False)
+def plot_piechart():
+    """Plot a piechart and save it as an html file."""
+    actors_df = load_df('data/processed_data/clean_dataset.csv')
+    title = "Actors ethnicities distribution"
+    figure_ethnicities = piechart(actors_df,'Actor_ethnicity',title)
+    pio.write_html(figure_ethnicities, file="./tests/ethnicities_piechart.html", auto_open=False)
 
 # actors_diversity = ethnic_groups(actors_df)
 # figure_ethnic_group = piechart(actors_diversity,'ethnic_group', 'Ethnic Groups') 
