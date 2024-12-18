@@ -15,7 +15,7 @@ background_color = ["#FFF8D3"] # website background color
 
 # Set figure size for beautiful-jekyll compatibility
 FIGURE_WIDTH = 800   # pixels
-FIGURE_HEIGHT = 500  # pixels
+FIGURE_HEIGHT = 600  # pixels
 
 def set_figsize(fig,width=FIGURE_WIDTH, height=FIGURE_HEIGHT):
     """Set the figure size for matplotlib plots."""
