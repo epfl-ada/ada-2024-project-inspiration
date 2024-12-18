@@ -5,6 +5,15 @@ import plotly.io as pio
 #import matplotlib.pyplot as plt
 #import seaborn as sns
 
+
+# Set figure size for beautiful-jekyll compatibility
+FIGURE_WIDTH = 800   # pixels
+FIGURE_HEIGHT = 500  # pixels
+
+def set_figsize(fig,width=FIGURE_WIDTH, height=FIGURE_HEIGHT):
+    """Set the figure size for matplotlib plots."""
+    fig.update_layout(width=width, height=height)
+
 def load_df(path_df):
     """
     Loads a DataFrame from a specified path.
@@ -123,6 +132,7 @@ def piechart(df,column,Title):
              labels={column: column, 'Count': 'Number of Actors'})
     fig.update_traces(textinfo='none')
     fig.update_layout(paper_bgcolor="#FFF8D3")
+    set_figsize(fig)
     fig.show()
     return fig
 

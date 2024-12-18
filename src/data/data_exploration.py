@@ -13,6 +13,14 @@ import plotly.graph_objects as go
 
 background_color = ["#FFF8D3"] # website background color
 
+# Set figure size for beautiful-jekyll compatibility
+FIGURE_WIDTH = 800   # pixels
+FIGURE_HEIGHT = 500  # pixels
+
+def set_figsize(fig,width=FIGURE_WIDTH, height=FIGURE_HEIGHT):
+    """Set the figure size for matplotlib plots."""
+    fig.update_layout(width=width, height=height)
+
 def color_palette(color):
     """take a color name as an argument and return the color in hex format"""
     "#A01812",  # Rouge foncé
@@ -61,6 +69,7 @@ def plot_histogram(variable,parameter,color,title, html_output):
     plotly figure. Save it in html format. With the right background for the website.
     """
     fig = px.histogram(variable, x= parameter, title=title, color_discrete_sequence=color)
+    set_figsize(fig)
     fig.update_layout(paper_bgcolor="#FFF8D3") # website background color
     # save it in html in test folder
     fig.write_html(f'tests/{html_output}.html')
@@ -73,7 +82,7 @@ def plot_evolution(dataframe,color,title,html_output):
     }))
 
     fig = go.Figure()
-    fig.update_layout(width=1000, height=600)
+    
     fig.add_trace(go.Scatter(
         x=diversity_by_year.index,
         y=diversity_by_year.average_diversity,
@@ -95,7 +104,7 @@ def plot_evolution(dataframe,color,title,html_output):
         yaxis_title="Diversity Score",
         legend_title="Metrics",
         template="plotly_white",
-        width=1000, height=600
+        width=800, height=600
         # paper_bgcolor=background_color[0]
     )
     # Set the background color
@@ -110,12 +119,14 @@ def plot_movie_release_date(df,color,title,html_output):
     """
     Plot the number of movies released per year. and save it in html format.
     """
+    
     # Sort df by year
     df['Movie_release_date'] = df['Movie_release_date'].astype(int)
     fig = px.histogram(df['Movie_release_date'], x="Movie_release_date",color_discrete_sequence=color,title=title)
+    
     fig.update_xaxes(title_text="Movie release date")
     fig.update_yaxes(title_text="Number of movies")
-    fig.update_layout(width=1000, height=600)
+    set_figsize(fig,800)
     set_background_color(fig)
     fig.write_html(f'tests/{html_output}.html') # save it in html in test folder
     fig.show()
@@ -137,7 +148,7 @@ def plot_trend_line(df,color_diversity,color_trend,title,html_output):
     
     # Create the figure
     fig = go.Figure()
-
+    set_figsize(fig)
     # Add line for average diversity score
     fig.add_trace(go.Scatter(
         x=diversity_by_year['Movie_release_date'],
@@ -186,6 +197,7 @@ def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, t
     """
     # Create the figure
     fig = go.Figure()
+    set_figsize(fig)
     colors = color_palette(color_high) + color_palette(color_low)
     # Add the bar plot for high diversity
     fig.add_trace(go.Bar(
