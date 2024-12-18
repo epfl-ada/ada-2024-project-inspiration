@@ -29,8 +29,8 @@ def load_df(path_df):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-def ethnic_groups(actors_df,groups=16):
-    ethnicities = actors_df['Actor_ethnicity'].unique().tolist()
+def ethnic_groups(actors_df,groups=16): #the groups determines which list we use. The difference is in the mixed, which is either broad or divided in 3 mixed groups
+    ethnicities = actors_df['Actor_ethnicity'].unique().tolist() #list all the ethnicities we have
     if groups == 16:
         ethnic_groups = {
         'East Asian': ['Taiwanese', 'Koreans', 'Chinese Americans', 'Hongkongers', 'Chinese Singaporeans', 'Korean American', 'Chinese Filipino', 'Malaysian Chinese', 'Chinese Indonesians', 'Chinese Canadians', 'Chinese Jamaicans', 'Han Chinese people', 'Zhuang people', 'Manchu', 'Buryats','Gin people', 'Japanese people', 'Koryo-saram', 'Ryukyuan people'],
@@ -78,45 +78,45 @@ def ethnic_groups(actors_df,groups=16):
             ethnicity_to_group[ethnicity] = group
 
     classified_ethnicities = {ethnicity: ethnicity_to_group.get(ethnicity, 'Unknown') for ethnicity in ethnicities}
-    actors_df['ethnic_group'] = actors_df['Actor_ethnicity'].map(ethnicity_to_group)
+    actors_df['ethnic_group'] = actors_df['Actor_ethnicity'].map(ethnicity_to_group) #maps every ethnicity to its group
     return actors_df
 
-def check_nan_Ethnicity(actors_df):
+def check_nan_Ethnicity(actors_df): #we want to check for nan ethnicity values
     actors_isnull = actors_df.isnull()
-    nan_lines = actors_df[actors_df['ethnic_group'].isnull() == True]['Actor_ethnicity']
-    nan_ethnicity = nan_lines.value_counts() # We don't have any NaN anymore
-    # print(nan_ethnicity)
+    nan_lines = actors_df[actors_df['ethnic_group'].isnull() == True]['Actor_ethnicity'] #identify what lines 
+    nan_ethnicity = nan_lines.value_counts() # will count the nan values
+    print(nan_ethnicity) #to make sure there are no nan values. If there are any, we can quickly identify what causes the problem
     return 
 
-def naive_diversity(actors_df):
-    mov_div = actors_df.groupby('Wikipedia_movie_ID').agg(ethnicity_number=('ethnic_group','nunique'),actor_number=('Wikipedia_movie_ID','size')).reset_index()
-    mov_div['naive_diversity']=mov_div['ethnicity_number']/mov_div['actor_number']
+def naive_diversity(actors_df): #define a naive coefficient for diversity
+    mov_div = actors_df.groupby('Wikipedia_movie_ID').agg(ethnicity_number=('ethnic_group','nunique'),actor_number=('Wikipedia_movie_ID','size')).reset_index() #groups the actors list by movie and counts the amount of actors per movie
+    mov_div['naive_diversity']=mov_div['ethnicity_number']/mov_div['actor_number'] #our naive diversity score
     return mov_div
 
-def ethnic_entropy(actors_df,mov_div,type = '*'):
-    ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')
-    ethn_count = ethn_count.merge(mov_div[['Wikipedia_movie_ID','actor_number']], on='Wikipedia_movie_ID', how='left')
-    ethn_count['proportion'] = ethn_count['num_actors']/ethn_count['actor_number']
-    ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])
-    mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)   #maybe try different formula, this is wrong: should be 
-    entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()
-    diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')
+def ethnic_entropy(actors_df,mov_div,type = '*'): #the type is how we define diversity score
+    ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')                #groups by movie and ethnic group
+    ethn_count = ethn_count.merge(mov_div[['Wikipedia_movie_ID','actor_number']], on='Wikipedia_movie_ID', how='left')              #merge onto movie df
+    ethn_count['proportion'] = ethn_count['num_actors']/ethn_count['actor_number']                                                  #proportion of an ethnic group over total actors of that movie
+    ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])                                           #our formula for entropy, adding 1 so that we never have a null value 
+    mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)                                                                     #max entropy of a state with 16 possible ethnic_groups 
+    entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()                                      #sum the entropies for a single movie
+    diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')       #merge everything together for final_df
     diversity_final.to_csv('div_test.csv')
-    if type == 'naive':
+    if type == 'naive': 
         diversity_final['diversity'] = diversity_final['naive_diversity']
     elif type == 'entropy': 
         diversity_final['diversity'] = diversity_final['entropy']
-    elif type == 'entropy_norm':
+    elif type == 'entropy_norm': #normalized the entropy
         diversity_final['diversity'] = diversity_final['entropy']/diversity_final['max_entropy']
-    elif type == '*':
+    elif type == '*': #naive*entropy
         diversity_final['diversity']= diversity_final['naive_diversity']*diversity_final['entropy']
-    elif type == '*norm':
+    elif type == '*norm': #naive*normalized entropy
         diversity_final['diversity']=diversity_final['naive_diversity']*diversity_final['entropy']/diversity_final['max_entropy'] 
-    elif type == '+norm':
+    elif type == '+norm': #naive + normalized entropy
         diversity_final['diversity'] = diversity_final['diversity']=diversity_final['naive_diversity'] + diversity_final['entropy']/diversity_final['max_entropy'] 
     return diversity_final
 
-def ethnic_entropy_old(actors_df,mov_div):
+def ethnic_entropy_old(actors_df,mov_div): #this is the old function, we don't use it
     ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')
     tot_actors = ethn_count.groupby('Wikipedia_movie_ID')['num_actors'].transform('sum')
 
