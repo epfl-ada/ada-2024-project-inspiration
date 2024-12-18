@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 background_color = ["#FFF8D3"] # website background color
 
 def color_palette(color):
-    """take a color name as an argument and return the color in hex format"""
+    """take a color name as an argument and return the color in hex format
     "#A01812",  # Rouge foncé
     "#7A0A08",  # Rouge plus foncé
     "#3A0605",  # Rouge plus plus foncé
@@ -33,6 +33,7 @@ def color_palette(color):
     "#8A3D0C",  # Marron
     "#4C1508"   # Marron foncé
     # Create a DataFrame with color names and hex codes
+    """
     colors_df = pd.DataFrame({
         'name': ['dark_red', 'darker_red', 'darkest_red',
                 'blue', 'dark_blue', 'darker_blue', 'darker_blue2', 'darker_blue3', 'darkest_blue',
@@ -104,7 +105,6 @@ def plot_evolution(dataframe,color,title,html_output):
     fig.show()
     # save it in html for the website
     fig.write_html(f'tests/{html_output}.html')
-
 
 def plot_movie_release_date(df,color,title,html_output):
     """
@@ -241,21 +241,7 @@ def mean_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
 
     # Average diversity for film with high box office revenue / low box office revenue
     avg_diversity_box_office_0 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] <= box_office_threshold]['diversity'].mean()
-    avg_diversity_box_office_1 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] > box_office_threshold]['diversity'].mean()
-
-    # # Print the results on overall success
-    # print(f"Average diversity for film successful: {avg_diversity_overall_1:.4f}")
-    # print(f"Average diversity for film less successful: {avg_diversity_overall_0:.4f}")
-    # # Print the results on nomination
-    # print(f"Average diversity for film nominated: {avg_diversity_nominated_1:.4f}")
-    # print(f"Average diversity for film not nominated: {avg_diversity_nominated_0:.4f}")
-    # # Print the results on ratings
-    # print(f"Average diversity for film with high ratings: {diversite_ratings_1:.4f}")
-    # print(f"Average diversity for film with lower ratings: {diversite_ratings_0:.4f}")
-    # # Print the results on box office revenue
-    # print(f"Average diversity for film with high box office revenue: {avg_diversity_box_office_1:.4f}")
-    # print(f"Average diversity for film with lower box office revenue: {avg_diversity_box_office_0:.4f}")
-    
+    avg_diversity_box_office_1 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] > box_office_threshold]['diversity'].mean()   
 
     # Prepare data for interactive bar plots
     # Define the categories and average diversity scores on overall success
@@ -281,66 +267,6 @@ def mean_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
                   categories_nomination, diversity_nomination
                   ]
     return mean_table
-
-    # color_high = 'beige_plus_plus'
-    # color_low = 'dark_red'
-    # # Plot the bar plots for each criteria
-    # # Plot overall success
-    # plot_interactive_bar_plot(categories_success, diversity_success,
-    #                           'Success', color_high, color_low,
-    #                           'Average Diversity on overall Success', 'diversity_success')
-    # # Plot nominations
-    # plot_interactive_bar_plot(categories_nomination, diversity_nomination,
-    #                           'Nomination', color_high, color_low,
-    #                           'Average Diversity by Nomination', 'diversity_nomination')
-    
-    # # Plot ratings
-    # plot_interactive_bar_plot(categories_ratings, diversity_ratings,
-    #                           'Ratings', color_high, color_low,
-    #                           'Average Diversity by Ratings', 'diversity_ratings')
-    # # Plot box office revenue
-    # plot_interactive_bar_plot(categories_box_office, diversity_box_office,
-    #                             'Movie_box_office_revenue', color_high, color_low,
-    #                             'Average Diversity by Box Office Revenue', 'diversity_box_office')
-
-    # # Create the interactive bar plots
-    # fig = go.Figure()
-
-    # # Plot for Nomination
-    # fig.add_trace(go.Bar(
-    #     x=categories_nomination, y=diversity_nomination,
-    #     name='Nomination',
-    #     marker=dict(color=['#B77526', '#A01812'])
-    # ))
-
-    # # Plot for Ratings
-    # fig.add_trace(go.Bar(
-    #     x=categories_ratings, y=diversity_ratings,
-    #     name='Ratings',
-    #     marker=dict(color=['#B77526', '#A01812']),
-    
-    # ))
-
-    # # Plot for Success
-    # fig.add_trace(go.Bar(
-    #     x=categories_success, y=diversity_success,
-    #     name='Success',
-    #     marker=dict(color=['#B77526', '#A01812']),
-    
-    # ))
-
-    # # Update layout for better appearance
-    # fig.update_layout(
-    #     title="Diversity Analysis by Different Factors",
-    #     barmode='group',
-    #     xaxis_title="Categories",
-    #     yaxis_title="Average Diversity",
-    #     xaxis_tickangle=-30,
-    #     showlegend=True
-    # )
-
-    # # Show the interactive plot
-    # fig.show()
 
 def get_thresholds(df, ratings_quantile, box_office_quantile):
     """
@@ -378,9 +304,51 @@ def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
     t_test_box=stats.ttest_ind(df.loc[df['Movie_box_office_revenue'] > box_office_threshold]['diversity'], df.loc[df['Movie_box_office_revenue'] <= box_office_threshold]['diversity'])
     t_test_ratings=stats.ttest_ind(df.loc[df['Ratings'] > ratings_threshold ]['diversity'], df.loc[df['Ratings'] <= ratings_threshold ]['diversity'])
 
-
+    # Store the t-test results in a DataFrame and save it to HTML
     t_test_sucess = store_t_test(t_test_sucess, 'Overall_success')
     t_test_nomination = store_t_test(t_test_nomination, 'Nomination')
     t_test_ratings = store_t_test(t_test_ratings, 'Ratings')
     t_test_box = store_t_test(t_test_box, 'Box_office_revenue')
     return t_test_sucess, t_test_nomination, t_test_ratings, t_test_box
+
+
+def plot_propensity_matching(treated, control, propensity_scores, color_treated, color_control, title, html_output):
+    """
+    Plot propensity score distributions for treated and control groups.
+    
+    Parameters:
+    treated: array-like, propensity scores for treated group
+    control: array-like, propensity scores for control group
+    color_treated: str, color name for treated group from color_palette
+    color_control: str, color name for treated group from color_palette
+    title: str, plot title
+    html_output: str, filename for html output
+    """
+    fig = go.Figure()
+    
+    fig.add_trace(go.Histogram(
+        x=treated,
+        name='Treated',
+        opacity=0.75,
+        marker_color=color_palette(color_treated)[0]
+    ))
+    
+    fig.add_trace(go.Histogram(
+        x=control,
+        name='Control',
+        opacity=0.75,
+        marker_color=color_palette(color_control)[0]
+    ))
+
+    fig.update_layout(
+        title=title,
+        xaxis_title="Propensity Score",
+        yaxis_title="Count",
+        barmode='overlay',
+        width=1000,
+        height=600
+    )
+
+    set_background_color(fig)
+    fig.write_html(f'tests/{html_output}.html')
+    fig.show()
