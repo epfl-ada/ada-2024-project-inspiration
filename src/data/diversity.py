@@ -61,7 +61,30 @@ def naive_diversity(actors_df):
     mov_div['naive_diversity']=mov_div['ethnicity_number']/mov_div['actor_number']
     return mov_div
 
-def ethnic_entropy(actors_df,mov_div):
+def ethnic_entropy(actors_df,mov_div,type = '*'):
+    ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')
+    ethn_count = ethn_count.merge(mov_div[['Wikipedia_movie_ID','actor_number']], on='Wikipedia_movie_ID', how='left')
+    ethn_count['proportion'] = ethn_count['num_actors']/ethn_count['actor_number']
+    ethn_count['entropy'] = 1-ethn_count['proportion'] * np.log(ethn_count['proportion'])
+    mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)   #maybe try different formula, this is wrong: should be 
+    entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()
+    diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')
+    diversity_final.to_csv('div_test.csv')
+    if type == 'naive':
+        diversity_final['diversity'] = diversity_final['naive_diversity']
+    elif type == 'entropy': 
+        diversity_final['diversity'] = diversity_final['entropy']
+    elif type == 'entropy_norm':
+        diversity_final['diversity'] = diversity_final['entropy']/diversity_final['max_entropy']
+    elif type == '*':
+        diversity_final['diversity']= diversity_final['naive_diversity']*diversity_final['entropy']
+    elif type == '*norm':
+        diversity_final['diversity']=diversity_final['naive_diversity']*diversity_final['entropy']/diversity_final['max_entropy'] 
+    elif type == '+norm':
+        diversity_final['diversity'] = diversity_final['diversity']=diversity_final['naive_diversity'] + diversity_final['entropy']/diversity_final['max_entropy'] 
+    return diversity_final
+
+def ethnic_entropy_old(actors_df,mov_div):
     ethn_count = actors_df.groupby(['Wikipedia_movie_ID','ethnic_group']).agg('size').reset_index(name='num_actors')
     tot_actors = ethn_count.groupby('Wikipedia_movie_ID')['num_actors'].transform('sum')
 
