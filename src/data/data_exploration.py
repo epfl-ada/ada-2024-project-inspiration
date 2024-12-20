@@ -561,6 +561,12 @@ def plot_propensity(dataframe,number, color_group_1, color_group_2, title, html_
     fig = go.Figure(data=[treated_hist, control_hist])
     set_background_color(fig)
     set_figsize(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
     fig.update_layout(title=title,
         xaxis_title='Box office revenue',
         yaxis_title='Movie count',
