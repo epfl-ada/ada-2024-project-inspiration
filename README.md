@@ -16,8 +16,7 @@ https://flore-mueth.github.io/ADA_P3-jekyll/
 
 ## Project Structure
 
-The directory structure of new project looks like this:
-
+The directory structure of our project is as follows:
 ```
 ├── data                        <- Project data files
 │   ├── raw_data                <- Data unprocessed directory
@@ -69,19 +68,19 @@ The relationship between diversity in film casts and box office success is incre
 ### **TASK 1: Getting to know the data**
 
 **Clean the data:**   
-**1\)** remove missing value and non usable one :   
-\- character et movie metadata rename title   
-\- plot missing value and remaining column  
-\- keep only the column of interest : GENERAL : wiki\_ID, release date, movie name, actor ethnicity, movie country. FOR SUCCESS ANALYSIS : \+ box office, note du public, oscar nomination  
-**2\)** clean the value, we want all the column written in the format without value that are not understable or empty (like {})  
-**3\)** Create a final dataframe with all the informations about character and movie → merging on wiki\_id or on movie name in function of the step or what we want
+**1)** remove missing value and non usable one :   
+- character & movie metadata rename title   
+- plot missing value and remaining column  
+- keep only the column of interest : GENERAL : wiki_ID, release date, movie name, actor ethnicity, movie country. FOR SUCCESS ANALYSIS : + box office, note du public, oscar nomination  
+**2)** clean the value, we want all the column written in the format without value that are not understable or empty (like {})  
+**3)** Create a final dataframe with all the informations about character and movie → merging on wiki\_id or on movie name in function of the step or what we want
 
 ### **TASK 2: Data enrichment** 
 
 To conduct our analysis, we decided to import other databases: 
 
-- **fb\_wiki\_mapping.tsv**: The additional dataset links freebase\_id values to wikidata\_id and label, enhancing the project by enabling connections to Wikidata and adding descriptive labels. This mapping enriches data from the primary datasets, providing access to additional metadata and improving interpretability.  In the code, we use a function that searches the TSV file for matching freebase\_id entries, returning the wikidata\_id and label if found, or None if not.  
-- Two additional datasets available on [IMDb's website](https://datasets.imdbws.com/). This dataset provides us with the movie name and movies’ ratings, users ratings on a scale from 0 to 10\.  We worked with 1\) **title.basics.tsv**: This dataset allows us to retrieve the title of the film associated with a unique identifier. 2\) **title.ratings.tsv**: This dataset allows us to retrieve IMDb ratings of films associated with a unique identifier. These dataset will enable us to analyze film ratings and understand whether cast diversity influences user scores.
+- **fb_wiki_mapping.tsv**: The additional dataset links freebase_id values to wikidata_id and label, enhancing the project by enabling connections to Wikidata and adding descriptive labels. This mapping enriches data from the primary datasets, providing access to additional metadata and improving interpretability.  In the code, we use a function that searches the TSV file for matching freebase_id entries, returning the wikidata_id and label if found, or None if not.  
+- Two additional datasets available on [IMDb's website](https://datasets.imdbws.com/). This dataset provides us with the movie name and movies’ ratings, users ratings on a scale from 0 to 10.  We worked with 1\) **title.basics.tsv**: This dataset allows us to retrieve the title of the film associated with a unique identifier. 2\) **title.ratings.tsv**: This dataset allows us to retrieve IMDb ratings of films associated with a unique identifier. These dataset will enable us to analyze film ratings and understand whether cast diversity influences user scores.
 
 Database from worldwide acknowledged awards, 
 
@@ -98,11 +97,11 @@ All these datasets were cleaned and filtered before merging them to our original
 
 #### 1) **how can we define diversity and group ethnicities**
 
-\-Define Major Groups: Use ChatGPT to determine the optimal number of major ethnic groups and create a clustering approach for grouping ethnicities accordingly.
+- Define Major Groups: Use ChatGPT to determine the optimal number of major ethnic groups and create a clustering approach for grouping ethnicities accordingly.
 
-\-First Analysis (Basic Approach): Calculate diversity as the number of distinct ethnicities in a film, normalized by the total number of characters. This results in a percentage representing diversity.
+- First Analysis (Basic Approach): Calculate diversity as the number of distinct ethnicities in a film, normalized by the total number of characters. This results in a percentage representing diversity.
 
-\-Second Analysis (Refined Approach): Assess the distribution of ethnicities within the film. For example, consider if ethnic representation is balanced (e.g., 50-50, 1/3-1/3-1/3). This balance score can then be used as a coefficient to adjust and refine the diversity percentage calculated in the first analysis.
+- Second Analysis (Refined Approach): Assess the distribution of ethnicities within the film. For example, consider if ethnic representation is balanced (e.g., 50-50, 1/3-1/3-1/3). This balance score can then be used as a coefficient to adjust and refine the diversity percentage calculated in the first analysis.
 
 #### 2) **Definition of a successful movie:** 
 
@@ -110,31 +109,31 @@ We define a successful film based on three criteria: high box office revenue, hi
 
 To ensure a sufficient sample size of successful films, we think of setting thresholds for each criterion:
 
-\-High Box Office Revenue: We will specify the threshold for box office earnings to classify a film as financially successful.
+-High Box Office Revenue: We will specify the threshold for box office earnings to classify a film as financially successful.
 
-\-High User Ratings: Films with an average user rating of 7/10 or higher are considered highly rated.
+-High User Ratings: Films with an average user rating of 7/10 or higher are considered highly rated.
 
-\-Award Nominations: Rather than limiting our selection to award winners, which could be too restrictive, we include all films nominated for Oscars and Golden Globes, among other prominent awards.
+-Award Nominations: Rather than limiting our selection to award winners, which could be too restrictive, we include all films nominated for Oscars and Golden Globes, among other prominent awards.
 
 Conclusion:  we have shown that our project is feasible 
 
-### **TASK 4: Analysis and plan to answer research questions (TBD in Milestone 3\)**
+### **TASK 4: Analysis and plan to answer research questions (TBD in Milestone 3)**
 
 This section forms the core of our analysis, aiming to assess the correlation between cast diversity and film success. Specifically, we want to determine whether diversity is more prevalent in successful films or if no discernible pattern exists. We will analyze films categorized into two groups—successful and less successful—based on established success criteria.
 
 #### 1) **Comparing Diversity Across Success Levels**
 
-\-Calculate the average diversity score for both successful and less successful films: average diversity in successful films and average diversity in less successful films. Examine the difference in diversity averages between the two groups.
+-Calculate the average diversity score for both successful and less successful films: average diversity in successful films and average diversity in less successful films. Examine the difference in diversity averages between the two groups.
 
-\-Significance Testing: Conduct a two-sided t-test (using stats.ttest\_ind) to evaluate if the diversity difference between successful and less successful films is statistically significant. The null hypothesis is that both groups have identical average diversity scores.
+-Significance Testing: Conduct a two-sided t-test (using stats.ttest_ind) to evaluate if the diversity difference between successful and less successful films is statistically significant. The null hypothesis is that both groups have identical average diversity scores.
 
 #### 2) **Assessing Correlation between Diversity and Success**
 
-\-Correlation Analysis: Evaluate the dependency between diversity and film success using: Pearson correlation (stats.pearson) for linear associations.
+-Correlation Analysis: Evaluate the dependency between diversity and film success using: Pearson correlation (stats.pearson) for linear associations.
 
-\-Spearman correlation (stats.spearman) 
+-Spearman correlation (stats.spearman) 
 
-\-Regression Analysis: Investigate the association type (e.g., weak, negative, positive) through linear regression.
+-Regression Analysis: Investigate the association type (e.g., weak, negative, positive) through linear regression.
 
 #### 3) **Measuring Uncertainty**
 
@@ -157,18 +156,19 @@ Mathilde:Statistic analysis
 Berend:Ethnicity: Make a function to define ethnicity value of a film  
 Albane:Statistic analysis   
 Flore: Statistic analysis   
-Francesco: Ethnicity: better definition of ethnic groups. and find a punchy project name
-
-### **Question for TAs** 
-
-- We have many very specific ethnicities and we want to have more general ethnicities. This is now done manually, but ideally we would like to use something like openai to automate this. Is this possible? And then do we have the ‘license’ or do we have a quota of questions asked, since we encountered some problems when trying to call openai directly from the script (it said the question quota was exhausted).
-
-- What percentage of successful films should we target as a threshold to ensure meaningful outputs in our analysis?
+Francesco: Ethnicity: better definition of ethnic groups.
 
 ## Milestone 3
 
-### Treatment of the diversity data and establishing the coefficient
+### Clean the data
+#### On the given dataset
+From the given datasets, we have cleaned the data by removing missing values and non-usable characters. We kept only the column of interest :
+- GENERAL : Movie name, release date, ratings , Wikipedia_ID, Box office revenue, Movie countries, Movies languages, actor ethnicity
+#### additional datasets
+We have also cleaned the additional datasets we imported. We kept only the columns of interest and removed the missing values. We also merged the datasets to our original data. After defining our diversity and success criteria. 
 
+
+### Treatment of the diversity data and establishing the coefficient
 
 #### 1) Treating the ethnicities
 
@@ -178,7 +178,7 @@ When we first have a look at the ethnicities, we can see that there are a total 
 
 Once the ethnicities have been sorted into larger groups (16), we can start defining diversity. The focus being on the diversity of the cast and not the representation of minority groups, country of production of the movie doesn’t have to be taken into account. The first and easiest way to calculate diversity would be dividing the number of ethnicities over the number of actors. However, for a film with 9 actors and 3 ethnicities, this definition would give the same diversity score for a distribution (3,3,3) as for (1,1,7). Calculating an entropy could therefore complete the previous definition. The basic entropy formula is: 
 
-S \= Σpi·ln(pi) , pi being the fraction an ethnicity represents in the movie . (+1)
+S \= Σpi·ln(pi) , pi being the fraction an ethnicity represents in the movie .
 
 **One modification was made**. Indeed, if we have all actors from 1 ethnicity, we get an entropy of 0, but it is preferable to avoid the value of 0 since we will multiply the entropy with the other definition. We therefore have added 1 to the entropy. This entropy penalises the movies with smaller numbers of actors, which is why we have multiplied entropy with the first definition to establish our final diversity coefficient
 
@@ -188,19 +188,29 @@ Firstly, the data set gives us many movies with different numbers of actors and 
 
 Secondly, the diversity coefficient is based on the ethnic groups established previously. Changing the characteristics of the ethnic groups, such as their size, their number or their content will change the diversity factor.
 
-
 ### Success Definition
 Success is defined based on several parameters:
-- **Overall Success**: Whether the movie is considered successful or not.
 - **Nominations**: Whether the movie has received any nominations.
 - **Ratings**: The ratings of the movie, with a threshold defined by the 75th percentile.
 - **Box Office Revenue**: The box office revenue of the movie, with a threshold defined by the 75th percentile.
 
+We created a global success score by considering a movie successful when it meets at least one of the three criteria. This score is used to compare the success of movies with different criteria.
+
 ### Design of Plot Functions
 The plot functions are designed to visualize various aspects of the data, such as the distribution of diversity scores, the evolution of diversity over time, and the relationship between diversity and success parameters. The functions use Plotly for interactive visualizations and are customized to match the website's color scheme.
 
+### Main analysis
+#### 1) **Comparing Diversity Across Success Levels**
+We calculated the average diversity score for successful and less successful films and found that successful films tend to have higher diversity scores. The difference in diversity averages between the two groups is statistically significant, indicating that diversity may be a factor in a film's success.
+
+#### 2) **Assessing Correlation between Diversity and Success**
+We evaluated the dependency between diversity and film success using Pearson and Spearman correlation coefficients. The results suggest a positive correlation between diversity and success, with higher diversity scores associated with higher success scores. Linear regression analysis further supports this finding, indicating a positive relationship between diversity and success.
+
+#### 3) **Measuring Uncertainty**
+We quantified the uncertainty in our findings by calculating confidence intervals and standard errors. The results show that our findings are not that robust and reliable.
+
 ### Interpretation of Results
-The results show that there is a significant relationship between diversity and success parameters. Movies with higher diversity scores tend to be more successful, receive more nominations, have higher ratings, and generate more box office revenue. The visualizations help to illustrate these relationships and provide insights into the impact of diversity on movie success.
+The results are interpreted in the context of the research questions, focusing on the relationship between diversity and success in films. The analysis considers the impact of diversity on box office revenue, ratings, and award nominations, providing insights into the potential benefits of diversity in the film industry. We could not find a strong correlation between diversity and success, but the results suggest that diversity may contribute positively to a film's critical reception and audience ratings.
 
 ## Organisation within the team
 
