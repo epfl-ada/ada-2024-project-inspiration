@@ -30,7 +30,6 @@ def regression(df, features, target):
     
     # Make predictions
     y_pred = model.predict(X_test_scaled)
-    print(type(X_test))
     # Create results dataframe
     results_df = pd.DataFrame({
         #'X_test': X_test, # .values.tolist(),
