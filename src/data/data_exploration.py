@@ -291,18 +291,36 @@ def get_thresholds(df, ratings_quantile, box_office_quantile):
 
     return ratings_threshold, box_office_threshold
 
+# def store_t_test(t_test, metric):
+#     """
+#     Store the t-test results in a DataFrame and save it to HTML.
+#     """
+#     # Create a DataFrame for the t-test results with a single row
+#     styled_df = pd.DataFrame({
+#         'Metric': [metric],
+#         'Statistic': [t_test.statistic],
+#         'P-value': [t_test.pvalue]
+#     }).set_index('Metric')
+
+#     styled_df.to_html(f'tests/t_test_{metric}.html')
+#     return styled_df
+
 def store_t_test(t_test, metric):
     """
     Store the t-test results in a DataFrame and save it to HTML.
     """
-    # Create a DataFrame for the t-test results with a single row
+    # Create a DataFrame with the desired structure
     styled_df = pd.DataFrame({
-        'Metric': [metric],
-        'Statistic': [t_test.statistic],
-        'P-value': [t_test.pvalue]
-    }).set_index('Metric')
+        'Metric': [' ', ' '],  # Empty rows for Metric
+        'Statistic': [t_test.statistic, ' '],  # Statistic on the first row
+        'P-value': [t_test.pvalue, ' ']        # P-value on the second row
+    })
+    
+    # Add the metric as the index for the first row
+    styled_df.iloc[0, 0] = metric
 
-    styled_df.to_html(f'tests/t_test_{metric}.html')
+    # Save the DataFrame to an HTML file
+    styled_df.to_html(f'tests/t_test_{metric}.html', index=False)
     return styled_df
 
 def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
