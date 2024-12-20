@@ -197,6 +197,7 @@ def merge_success_actors(success_df,actors_df):
             "Movie_box_office_revenue",
             "Movie_countries",
             "Movie_languages",
+            "Movie_runtime",
             "Nomination",
             "diversity",
             "Success",

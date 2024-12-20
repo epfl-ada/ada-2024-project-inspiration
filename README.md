@@ -11,6 +11,9 @@ all the dataset used for our project are available trhough this google drive lin
 https://drive.google.com/drive/folders/15jMzHA16hZhBR0086Y3cT6uLr1BEbrLo?usp=sharing
 
 
+## Link to the website
+https://flore-mueth.github.io/ADA_P3-jekyll/
+
 ## Project Structure
 
 The directory structure of new project looks like this:
@@ -22,14 +25,17 @@ The directory structure of new project looks like this:
 │
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
-│       ├── load_awards_data.py                 <- file for loading awards data in \processed_data
-│       ├── data_visualisation.py               <- data visualization file called by results.ipynb
-│       ├── load_awards_data.py                 <- file for cleaning our datasets
+│       ├── cleaning_data.py                    <- file for cleaning our datasets
+│       ├── data_exploration.py                 <- file with our main analysis
+│       ├── data_visualisation.py               <- data visualization file
+│       ├── diversity.py                        <- file for defining the diversity of a movie
+│       ├── success.py                          <- file for defining the success of a movie
 │   ├── models                          <- Model directory
 │   ├── utils                           <- Utility directory
 │   ├── scripts                         <- Shell scripts
+│       ├── load_awards_data.py                 <- file for loading awards data in \processed_data
 │
-├── tests                       <- plots for the data visualisation on website
+├── plots                       <- plots for the data visualisation on website saved in .html
 │
 ├── results.ipynb               <- a well-structured notebook showing the results
 ├── preliminary_results_P2.ipynb<- Notebook with preliminary results from milestone 2
@@ -159,5 +165,47 @@ Francesco: Ethnicity: better definition of ethnic groups. and find a punchy proj
 
 - What percentage of successful films should we target as a threshold to ensure meaningful outputs in our analysis?
 
+## Milestone 3
 
-# Milestone 3
+### Treatment of the diversity data and establishing the coefficient
+
+
+#### 1) Treating the ethnicities
+
+When we first have a look at the ethnicities, we can see that there are a total of more than 350 different ethnicities, some of them still very similar (e.g. 'Austrian American' and 'Austrian Canadian' etc). We want to first simplify this ethnicity criterion before defining diversity. If we didn’t sort the ethnicities, a film with a cast of a German, Austrian and Swiss would be considered very diverse. This is however not what we want to consider diverse. It is for this reason that the ethnicities were first grouped into larger ethnic groups. This was done with the help of a LLM, with checks and corrections done by hand. Doing this by hand was still possible thanks to the manageable number of ethnicities and the LLM doing the most time-consuming part.
+
+#### 2) Defining diversity
+
+Once the ethnicities have been sorted into larger groups (16), we can start defining diversity. The focus being on the diversity of the cast and not the representation of minority groups, country of production of the movie doesn’t have to be taken into account. The first and easiest way to calculate diversity would be dividing the number of ethnicities over the number of actors. However, for a film with 9 actors and 3 ethnicities, this definition would give the same diversity score for a distribution (3,3,3) as for (1,1,7). Calculating an entropy could therefore complete the previous definition. The basic entropy formula is: 
+
+S \= Σpi·ln(pi) , pi being the fraction an ethnicity represents in the movie . (+1)
+
+**One modification was made**. Indeed, if we have all actors from 1 ethnicity, we get an entropy of 0, but it is preferable to avoid the value of 0 since we will multiply the entropy with the other definition. We therefore have added 1 to the entropy. This entropy penalises the movies with smaller numbers of actors, which is why we have multiplied entropy with the first definition to establish our final diversity coefficient
+
+#### 3) Further comments
+
+Firstly, the data set gives us many movies with different numbers of actors and all the movies with 1 actor cannot be considered for a diversity calculation. If we wanted to further complete the analysis we could consider whether an actor is from a minority group.
+
+Secondly, the diversity coefficient is based on the ethnic groups established previously. Changing the characteristics of the ethnic groups, such as their size, their number or their content will change the diversity factor.
+
+
+### Success Definition
+Success is defined based on several parameters:
+- **Overall Success**: Whether the movie is considered successful or not.
+- **Nominations**: Whether the movie has received any nominations.
+- **Ratings**: The ratings of the movie, with a threshold defined by the 75th percentile.
+- **Box Office Revenue**: The box office revenue of the movie, with a threshold defined by the 75th percentile.
+
+### Design of Plot Functions
+The plot functions are designed to visualize various aspects of the data, such as the distribution of diversity scores, the evolution of diversity over time, and the relationship between diversity and success parameters. The functions use Plotly for interactive visualizations and are customized to match the website's color scheme.
+
+### Interpretation of Results
+The results show that there is a significant relationship between diversity and success parameters. Movies with higher diversity scores tend to be more successful, receive more nominations, have higher ratings, and generate more box office revenue. The visualizations help to illustrate these relationships and provide insights into the impact of diversity on movie success.
+
+## Organisation within the team
+
+- Mathilde: Statistical analysis and interpretation
+- Albane: Statistical analysis and interpretation
+- Flore: website design and implementation, data cleaning
+- Francesco: Project structuration, data visualization 
+- Berend : definition of diversity and diversity score
