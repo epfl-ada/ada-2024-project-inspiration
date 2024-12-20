@@ -4,8 +4,7 @@ Please use this structure for your project and document the installation, usage 
 
 
 ## How to use the library
-For our project pipeline, we used the given project template. We added 2 subdirectories to data : \raw_data with the uncleaned datasets and \processed_data with the 
-cleaned data sets
+For our project pipeline, we used the given project template. We added 2 subdirectories to data : \raw_data with the uncleaned datasets and \processed_data with the cleaned data sets
 
 all the dataset used for our project are available trhough this google drive link : 
 https://drive.google.com/drive/folders/15jMzHA16hZhBR0086Y3cT6uLr1BEbrLo?usp=sharing
