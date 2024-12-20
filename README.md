@@ -211,7 +211,7 @@ We evaluated the dependency between diversity and film success using Pearson and
 We quantified the uncertainty in our findings by calculating confidence intervals and standard errors. The results show that our findings are not that robust and reliable.
 
 ### 4) **Propensity score matching**
-Many cofounders can influence the success of a film. By conducting propensity score matching, we try to isolate the effect of diversity of the cast on movies' success. However results from propensity score matching does not seem concluant because the standard deviation of box office revenue data is very high and the data seems skewed. 
+Many cofounders can influence the success of a film. By conducting propensity score matching, we try to isolate the effect of diversity of the cast on movies' success. However results from propensity score matching does not seem concluant because the standard deviation of box office revenue data is very high and the data seems skewed. We obtain a more robust result when we consider ratings criteria with a lower standard deviation and a more normal distribution.
 
 ## Interpretation of Results
 The results are interpreted in the context of the research questions, focusing on the relationship between diversity and success in films. The analysis considers the impact of diversity on box office revenue, ratings, and award nominations, providing insights into the potential benefits of diversity in the film industry. We could not find a strong correlation between diversity and success, but the results suggest that diversity may contribute positively to a film's critical reception and audience ratings.
