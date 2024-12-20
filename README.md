@@ -160,23 +160,23 @@ Albane:Statistic analysis
 Flore: Statistic analysis   
 Francesco: Ethnicity: better definition of ethnic groups.
 
-## Milestone 3
+# Milestone 3
 
-### Clean the data
-#### On the given dataset
+## Clean the data
+### On the given dataset
 From the given datasets, we have cleaned the data by removing missing values and non-usable characters. We kept only the column of interest :
 - GENERAL : Movie name, release date, ratings , Wikipedia_ID, Box office revenue, Movie countries, Movies languages, actor ethnicity
-#### additional datasets
+### additional datasets
 We have also cleaned the additional datasets we imported. We kept only the columns of interest and removed the missing values. We also merged the datasets to our original data. After defining our diversity and success criteria. 
 
 
-### Treatment of the diversity data and establishing the coefficient
+## Treatment of the diversity data and establishing the coefficient
 
-#### 1) Treating the ethnicities
+### 1) Treating the ethnicities
 
 When we first have a look at the ethnicities, we can see that there are a total of more than 350 different ethnicities, some of them still very similar (e.g. 'Austrian American' and 'Austrian Canadian' etc). We want to first simplify this ethnicity criterion before defining diversity. If we didn’t sort the ethnicities, a film with a cast of a German, Austrian and Swiss would be considered very diverse. This is however not what we want to consider diverse. It is for this reason that the ethnicities were first grouped into larger ethnic groups. This was done with the help of a LLM, with checks and corrections done by hand. Doing this by hand was still possible thanks to the manageable number of ethnicities and the LLM doing the most time-consuming part.
 
-#### 2) Defining diversity
+### 2) Defining diversity
 
 Once the ethnicities have been sorted into larger groups (16), we can start defining diversity. The focus being on the diversity of the cast and not the representation of minority groups, country of production of the movie doesn’t have to be taken into account. The first and easiest way to calculate diversity would be dividing the number of ethnicities over the number of actors. However, for a film with 9 actors and 3 ethnicities, this definition would give the same diversity score for a distribution (3,3,3) as for (1,1,7). Calculating an entropy could therefore complete the previous definition. The basic entropy formula is: 
 
@@ -184,13 +184,13 @@ S \= Σpi·ln(pi) , pi being the fraction an ethnicity represents in the movie .
 
 **One modification was made**. Indeed, if we have all actors from 1 ethnicity, we get an entropy of 0, but it is preferable to avoid the value of 0 since we will multiply the entropy with the other definition. We therefore have added 1 to the entropy. This entropy penalises the movies with smaller numbers of actors, which is why we have multiplied entropy with the first definition to establish our final diversity coefficient
 
-#### 3) Further comments
+### 3) Further comments
 
 Firstly, the data set gives us many movies with different numbers of actors and all the movies with 1 actor cannot be considered for a diversity calculation. If we wanted to further complete the analysis we could consider whether an actor is from a minority group.
 
 Secondly, the diversity coefficient is based on the ethnic groups established previously. Changing the characteristics of the ethnic groups, such as their size, their number or their content will change the diversity factor.
 
-### Success Definition
+## Success Definition
 Success is defined based on several parameters:
 - **Nominations**: Whether the movie has received any nominations.
 - **Ratings**: The ratings of the movie, with a threshold defined by the 75th percentile.
@@ -198,20 +198,20 @@ Success is defined based on several parameters:
 
 We created a global success score by considering a movie successful when it meets at least one of the three criteria. This score is used to compare the success of movies with different criteria. We obtain a pourcentage of 25 % of successful movies. Which is a good balance between the two groups.
 
-### Design of Plot Functions
+## Design of Plot Functions
 The plot functions are designed to visualize various aspects of the data, such as the distribution of diversity scores, the evolution of diversity over time, and the relationship between diversity and success parameters. The functions use Plotly for interactive visualizations and are customized to match the website's color scheme.
 
-### Main analysis
-#### 1) **Comparing Diversity Across Success**
+## Main analysis
+### 1) **Comparing Diversity Across Success**
 We calculated the average diversity score for successful and less successful films and found that successful films tend to have higher diversity scores. The difference in diversity averages between the two groups is statistically significant, indicating that diversity may be a factor in a film's success.
 
-#### 2) **Assessing Correlation between Diversity and Success**
+### 2) **Assessing Correlation between Diversity and Success**
 We evaluated the dependency between diversity and film success using Pearson and Spearman correlation coefficients. The results suggest a positive correlation between diversity and success, with higher diversity scores associated with higher success scores. Linear regression analysis further supports this finding, indicating a positive relationship between diversity and success.
 
-#### 3) **Measuring Uncertainty**
+### 3) **Measuring Uncertainty**
 We quantified the uncertainty in our findings by calculating confidence intervals and standard errors. The results show that our findings are not that robust and reliable.
 
-### Interpretation of Results
+## Interpretation of Results
 The results are interpreted in the context of the research questions, focusing on the relationship between diversity and success in films. The analysis considers the impact of diversity on box office revenue, ratings, and award nominations, providing insights into the potential benefits of diversity in the film industry. We could not find a strong correlation between diversity and success, but the results suggest that diversity may contribute positively to a film's critical reception and audience ratings.
 
 ## Organisation within the team
