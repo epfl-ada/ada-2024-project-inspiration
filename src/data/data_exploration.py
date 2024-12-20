@@ -194,7 +194,7 @@ def get_subset_box_office(df):
     subset_box_office = df.dropna(subset=['Movie_box_office_revenue'])
     return subset_box_office
 
-def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, title, html_output):
+def plot_interactive_bar_plot(categorie,diversity,name, std_success,color_high, color_low, title, html_output):
     """
     Plot an interactive bar plot with the specified categories and diversity scores.
     """
@@ -205,6 +205,10 @@ def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, t
     # Add the bar plot for high diversity
     fig.add_trace(go.Bar(
         x=categorie, y=diversity,
+        error_y=dict(
+        type='data',
+        array=std_success,
+        visible=True),
         name=name,
         marker=dict(color=colors)
     ))
@@ -282,6 +286,64 @@ def mean_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
                   categories_nomination, diversity_nomination
                   ]
     return mean_table
+
+def std_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
+    """
+    Calculate the average diversity score for success parameters:
+    - Overall success
+    - Nominations movies
+    - Ratings
+    - Box office revenue
+    """
+
+    # Define the threshold for ratings and box office revenue
+    ratings_threshold = df['Ratings'].quantile(ratings_quantile)
+    box_office_threshold = df['Movie_box_office_revenue'].quantile(box_office_quantile)
+
+    # Calculate the average diversity score for different success parameters
+    # Average diversity for overall success movies
+    std_diversity_overall_0 = df.loc[df['Success'] == False]['diversity'].std()
+    std_diversity_overall_1 = df.loc[df['Success'] == True]['diversity'].std()
+
+    # Average diversity for film nominated / un-nominated
+    std_diversity_nominated_0 = df.loc[df['Nomination'] == False]['diversity'].std()
+    std_diversity_nominated_1 = df.loc[df['Nomination'] == True]['diversity'].std()
+    
+    # Average diversity for film with high ratings / low ratings
+    diversite_ratings_0 = df.loc[df['Ratings'] <= ratings_threshold]['diversity'].std()
+    diversite_ratings_1 = df.loc[df['Ratings'] > ratings_threshold]['diversity'].std()
+
+    # Define the subset box office data: 
+    subset_box_office = get_subset_box_office(df)
+
+    # Average diversity for film with high box office revenue / low box office revenue
+    std_diversity_box_office_0 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] <= box_office_threshold]['diversity'].std()
+    std_diversity_box_office_1 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] > box_office_threshold]['diversity'].std()   
+
+    # Prepare data for interactive bar plots
+    # Define the categories and average diversity scores on overall success
+    categories_success = ['Successful', 'Not Successful']
+    diversity_success = [std_diversity_overall_1, std_diversity_overall_0]
+
+    # define the categories and average diversity scores on box office revenue
+    categories_box_office = ['High Box Office Revenue', 'Low Box Office Revenue']
+    diversity_box_office = [std_diversity_box_office_1, std_diversity_box_office_0]
+
+    # Define the categories and average diversity scores on ratings
+    categories_ratings = ['High Ratings', 'Low Ratings']
+    diversity_ratings = [diversite_ratings_1, diversite_ratings_0]
+
+    # Define the categories and average diversity scores on nominations
+    categories_nomination = ['Nominated', 'Not Nominated']
+    diversity_nomination = [std_diversity_nominated_1, std_diversity_nominated_0]
+
+    # Store the results in a table
+    std_table = [categories_success, diversity_success, 
+                  categories_box_office, diversity_box_office,
+                  categories_ratings, diversity_ratings,
+                  categories_nomination, diversity_nomination
+                  ]
+    return std_table
 
 def get_thresholds(df, ratings_quantile, box_office_quantile):
     """
