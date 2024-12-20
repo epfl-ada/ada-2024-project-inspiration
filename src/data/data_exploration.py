@@ -10,6 +10,9 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import plotly.express as px
 import plotly.graph_objects as go
+from sklearn.preprocessing import StandardScaler
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
 
 background_color = ["#FFF8D3"] # website background color
 
@@ -323,7 +326,6 @@ def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
     t_test_box = store_t_test(t_test_box, 'Box_office_revenue')
     return t_test_sucess, t_test_nomination, t_test_ratings, t_test_box
 
-
 def plot_propensity_matching(treated, control, propensity_scores, color_treated, color_control, title, html_output):
     """
     Plot propensity score distributions for treated and control groups.
@@ -364,3 +366,40 @@ def plot_propensity_matching(treated, control, propensity_scores, color_treated,
     set_background_color(fig)
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
+
+def regression(df, features, target):
+    # Split features and target
+    X = df[features]
+    y = df[target]
+    # Split data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train.values)
+    X_train_scaled = pd.DataFrame(X_train_scaled, columns=X_train.columns, index=X_train.index)
+
+    # we add constant column
+    X_train_scaled = sm.add_constant(X_train_scaled)
+        
+    # Create and train the model
+    model = sm.OLS(y_train, X_train_scaled).fit()
+    
+    # Scale and prepare test data
+    X_test_scaled = scaler.transform(X_test.values)
+    X_test_scaled = pd.DataFrame(X_test_scaled, columns=X_test.columns, index=X_test.index)
+    X_test_scaled = sm.add_constant(X_test_scaled)
+    
+    # Make predictions
+    y_pred = model.predict(X_test_scaled)
+    # Create results dataframe
+    results_df = pd.DataFrame({
+        #'X_test': X_test, # .values.tolist(),
+        'y_test': y_test,
+        'y_pred': y_pred
+    })
+    results_df = pd.concat([results_df, X_test], axis=1)
+    if model.rsquared < 0.1:
+        print('WARNING: R-squared is below 0.1')
+        print(f'R-squared: {model.rsquared:.4f}')
+        print("As the R-squared is below 0.1, the model is not good enough to fit the data.")
+    
+    return results_df, model
