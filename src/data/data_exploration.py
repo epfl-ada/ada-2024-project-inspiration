@@ -324,43 +324,40 @@ def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
     return t_test_sucess, t_test_nomination, t_test_ratings, t_test_box
 
 
-def plot_propensity_matching(treated, control, propensity_scores, color_treated, color_control, title, html_output):
+def plot_propensity(group_1, group_2, color_group_1, color_group_2, title, html_output):
     """
-    Plot propensity score distributions for treated and control groups.
-    
-    Parameters:
-    treated: array-like, propensity scores for treated group
-    control: array-like, propensity scores for control group
-    color_treated: str, color name for treated group from color_palette
-    color_control: str, color name for treated group from color_palette
-    title: str, plot title
-    html_output: str, filename for html output
+    Plot the propensity score distribution for the treated and control groups.
     """
-    fig = go.Figure()
     
-    fig.add_trace(go.Histogram(
-        x=treated,
+    # Create a histogram for treated
+    treated_hist = go.Histogram(
+        x=group_1['Movie_box_office_revenue'],
         name='Treated',
-        opacity=0.75,
-        marker_color=color_palette(color_treated)[0]
-    ))
-    
-    fig.add_trace(go.Histogram(
-        x=control,
-        name='Control',
-        opacity=0.75,
-        marker_color=color_palette(color_control)[0]
-    ))
-
-    fig.update_layout(
-        title=title,
-        xaxis_title="Propensity Score",
-        yaxis_title="Count",
-        barmode='overlay',
-        width=1000,
-        height=600
+        marker=dict(color=color_group_1[0]),
+        opacity=0.6
     )
 
+    # Create a histogram for control
+    control_hist = go.Histogram(
+        x=group_2['Movie_box_office_revenue'],
+        name='Control',
+        marker=dict(color=color_group_2[0]),
+        opacity=0.4
+    )
+
+    # Create a figure and add both histograms
+    fig = go.Figure(data=[treated_hist, control_hist])
     set_background_color(fig)
+    set_figsize(fig)
+    fig.update_layout(title=title,
+        xaxis_title='Box office revenue',
+        yaxis_title='Movie count',
+        legend_title = 'Group',
+        barmode='overlay',
+        plot_bgcolor='white',
+        paper_bgcolor='white')
+    # Save the plot as an HTML file in the test folder
     fig.write_html(f'tests/{html_output}.html')
+
+    # Display the figure
     fig.show()
