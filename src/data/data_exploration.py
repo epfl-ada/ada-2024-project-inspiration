@@ -354,8 +354,7 @@ def plot_propensity(group_1, group_2, color_group_1, color_group_2, title, html_
         yaxis_title='Movie count',
         legend_title = 'Group',
         barmode='overlay',
-        plot_bgcolor='white',
-        paper_bgcolor='white')
+        plot_bgcolor='white')
     # Save the plot as an HTML file in the test folder
     fig.write_html(f'tests/{html_output}.html')
 
