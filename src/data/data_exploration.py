@@ -74,7 +74,14 @@ def plot_histogram(variable,parameter,color,title, html_output):
     """
     fig = px.histogram(variable, x= parameter, title=title, color_discrete_sequence=color)
     set_figsize(fig)
-    fig.update_layout(paper_bgcolor="#FFF8D3") # website background color
+    fig.update_layout(paper_bgcolor="#FFF8D3",  # Website background color
+                      plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
+    
     # save it in html in test folder
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
@@ -131,8 +138,15 @@ def plot_movie_release_date(df,color,title,html_output):
     fig.update_yaxes(title_text="Number of movies")
     set_figsize(fig,800)
     set_background_color(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
     fig.write_html(f'tests/{html_output}.html') # save it in html in test folder
     fig.show()
+
     #reset df type as int
 
 def plot_trend_line(df,color_diversity,color_trend,title,html_output):
@@ -221,6 +235,12 @@ def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, t
 
     # Set the background color
     set_background_color(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
     # Show the interactive plot
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
