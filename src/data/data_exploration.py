@@ -74,7 +74,14 @@ def plot_histogram(variable,parameter,color,title, html_output):
     """
     fig = px.histogram(variable, x= parameter, title=title, color_discrete_sequence=color)
     set_figsize(fig)
-    fig.update_layout(paper_bgcolor="#FFF8D3") # website background color
+    fig.update_layout(paper_bgcolor="#FFF8D3",  # Website background color
+                      plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
+    
     # save it in html in test folder
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
@@ -131,8 +138,15 @@ def plot_movie_release_date(df,color,title,html_output):
     fig.update_yaxes(title_text="Number of movies")
     set_figsize(fig,800)
     set_background_color(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
     fig.write_html(f'tests/{html_output}.html') # save it in html in test folder
     fig.show()
+
     #reset df type as int
 
 def plot_trend_line(df,color_diversity,color_trend,title,html_output):
@@ -194,7 +208,7 @@ def get_subset_box_office(df):
     subset_box_office = df.dropna(subset=['Movie_box_office_revenue'])
     return subset_box_office
 
-def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, title, html_output):
+def plot_interactive_bar_plot(categorie,diversity,name, std_success,color_high, color_low, title, html_output):
     """
     Plot an interactive bar plot with the specified categories and diversity scores.
     """
@@ -205,6 +219,10 @@ def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, t
     # Add the bar plot for high diversity
     fig.add_trace(go.Bar(
         x=categorie, y=diversity,
+        error_y=dict(
+        type='data',
+        array=std_success,
+        visible=True),
         name=name,
         marker=dict(color=colors)
     ))
@@ -221,6 +239,12 @@ def plot_interactive_bar_plot(categorie,diversity,name, color_high, color_low, t
 
     # Set the background color
     set_background_color(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
     # Show the interactive plot
     fig.write_html(f'tests/{html_output}.html')
     fig.show()
@@ -283,6 +307,64 @@ def mean_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
                   ]
     return mean_table
 
+def std_diversity(df, ratings_quantile=0.75, box_office_quantile= 0.75):
+    """
+    Calculate the average diversity score for success parameters:
+    - Overall success
+    - Nominations movies
+    - Ratings
+    - Box office revenue
+    """
+
+    # Define the threshold for ratings and box office revenue
+    ratings_threshold = df['Ratings'].quantile(ratings_quantile)
+    box_office_threshold = df['Movie_box_office_revenue'].quantile(box_office_quantile)
+
+    # Calculate the average diversity score for different success parameters
+    # Average diversity for overall success movies
+    std_diversity_overall_0 = df.loc[df['Success'] == False]['diversity'].std()
+    std_diversity_overall_1 = df.loc[df['Success'] == True]['diversity'].std()
+
+    # Average diversity for film nominated / un-nominated
+    std_diversity_nominated_0 = df.loc[df['Nomination'] == False]['diversity'].std()
+    std_diversity_nominated_1 = df.loc[df['Nomination'] == True]['diversity'].std()
+    
+    # Average diversity for film with high ratings / low ratings
+    diversite_ratings_0 = df.loc[df['Ratings'] <= ratings_threshold]['diversity'].std()
+    diversite_ratings_1 = df.loc[df['Ratings'] > ratings_threshold]['diversity'].std()
+
+    # Define the subset box office data: 
+    subset_box_office = get_subset_box_office(df)
+
+    # Average diversity for film with high box office revenue / low box office revenue
+    std_diversity_box_office_0 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] <= box_office_threshold]['diversity'].std()
+    std_diversity_box_office_1 = subset_box_office.loc[subset_box_office['Movie_box_office_revenue'] > box_office_threshold]['diversity'].std()   
+
+    # Prepare data for interactive bar plots
+    # Define the categories and average diversity scores on overall success
+    categories_success = ['Successful', 'Not Successful']
+    diversity_success = [std_diversity_overall_1, std_diversity_overall_0]
+
+    # define the categories and average diversity scores on box office revenue
+    categories_box_office = ['High Box Office Revenue', 'Low Box Office Revenue']
+    diversity_box_office = [std_diversity_box_office_1, std_diversity_box_office_0]
+
+    # Define the categories and average diversity scores on ratings
+    categories_ratings = ['High Ratings', 'Low Ratings']
+    diversity_ratings = [diversite_ratings_1, diversite_ratings_0]
+
+    # Define the categories and average diversity scores on nominations
+    categories_nomination = ['Nominated', 'Not Nominated']
+    diversity_nomination = [std_diversity_nominated_1, std_diversity_nominated_0]
+
+    # Store the results in a table
+    std_table = [categories_success, diversity_success, 
+                  categories_box_office, diversity_box_office,
+                  categories_ratings, diversity_ratings,
+                  categories_nomination, diversity_nomination
+                  ]
+    return std_table
+
 def get_thresholds(df, ratings_quantile, box_office_quantile):
     """
     Get the thresholds for ratings and box office revenue.
@@ -294,18 +376,37 @@ def get_thresholds(df, ratings_quantile, box_office_quantile):
 
     return ratings_threshold, box_office_threshold
 
+# def store_t_test(t_test, metric):
+#     """
+#     Store the t-test results in a DataFrame and save it to HTML.
+#     """
+#     # Create a DataFrame for the t-test results with a single row
+#     styled_df = pd.DataFrame({
+#         'Metric': [metric],
+#         'Statistic': [t_test.statistic],
+#         'P-value': [t_test.pvalue]
+#     }).set_index('Metric')
+
+#     styled_df.to_html(f'tests/t_test_{metric}.html')
+#     return styled_df
+
 def store_t_test(t_test, metric):
     """
     Store the t-test results in a DataFrame and save it to HTML.
     """
-    # Create a DataFrame for the t-test results with a single row
+    # Create a DataFrame with the desired structure
     styled_df = pd.DataFrame({
-        'Metric': [metric],
-        'Statistic': [t_test.statistic],
-        'P-value': [t_test.pvalue]
-    }).set_index('Metric')
+        'Metric': [' '],  # Empty rows for Metric
+        'Statistic': [t_test.statistic],  # Statistic on the first row
+        'P-value': [t_test.pvalue]        # P-value on the second row
+    })
+    
+    styled_df[['Statistic', 'P-value']] = styled_df[['Statistic', 'P-value']].map(lambda x: f'{x:.3e}')
+    # Add the metric as the index for the first row
+    styled_df.iloc[0, 0] = metric
 
-    styled_df.to_html(f'tests/t_test_{metric}.html')
+    # Save the DataFrame to an HTML file
+    styled_df.to_html(f'tests/t_test_{metric}.html', index=False)
     return styled_df
 
 def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
@@ -326,46 +427,6 @@ def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
     t_test_box = store_t_test(t_test_box, 'Box_office_revenue')
     return t_test_sucess, t_test_nomination, t_test_ratings, t_test_box
 
-def plot_propensity_matching(treated, control, propensity_scores, color_treated, color_control, title, html_output):
-    """
-    Plot propensity score distributions for treated and control groups.
-    
-    Parameters:
-    treated: array-like, propensity scores for treated group
-    control: array-like, propensity scores for control group
-    color_treated: str, color name for treated group from color_palette
-    color_control: str, color name for treated group from color_palette
-    title: str, plot title
-    html_output: str, filename for html output
-    """
-    fig = go.Figure()
-    
-    fig.add_trace(go.Histogram(
-        x=treated,
-        name='Treated',
-        opacity=0.75,
-        marker_color=color_palette(color_treated)[0]
-    ))
-    
-    fig.add_trace(go.Histogram(
-        x=control,
-        name='Control',
-        opacity=0.75,
-        marker_color=color_palette(color_control)[0]
-    ))
-
-    fig.update_layout(
-        title=title,
-        xaxis_title="Propensity Score",
-        yaxis_title="Count",
-        barmode='overlay',
-        width=1000,
-        height=600
-    )
-
-    set_background_color(fig)
-    fig.write_html(f'tests/{html_output}.html')
-    fig.show()
 
 def regression(df, features, target):
     # Split features and target
@@ -403,3 +464,144 @@ def regression(df, features, target):
         print("As the R-squared is below 0.1, the model is not good enough to fit the data.")
     
     return results_df, model
+
+# Function to store correlation results
+def store_corr(corr_type, column_name, results):
+    """
+    Store the correlation results in a DataFrame and save it to HTML.
+    """
+    # Create a DataFrame with the desired structure
+    styled_df = pd.DataFrame({
+        'Correlation Type': [corr_type],
+        'Correlation': [results.correlation],
+        'P-Value': [results.pvalue]
+    })
+
+    styled_df[['Correlation', 'P-Value']] = styled_df[['Correlation', 'P-Value']].map(lambda x: f'{x:.3e}')
+
+    # Save the DataFrame to an HTML file
+    styled_df.to_html(f'tests/corr_{column_name}_{corr_type}.html', index=False)
+    return styled_df
+
+def spearman(df, column_name):
+    results_sp = stats.spearmanr(df[column_name], df['diversity'])
+    return store_corr('Spearman', column_name, results_sp)
+
+def pearson(df, column_name, box_office = False):
+    if box_office == True:
+        df = get_subset_box_office(df)
+    results_ps = stats.pearsonr(df[column_name], df['diversity'])
+    return store_corr('Pearson', column_name, results_ps)
+def get_thresholds_diversity(df, diversity_quantile):
+    diversity_threshold = df['diversity'].quantile(diversity_quantile)
+    return diversity_threshold
+
+def count_countries(countries_str):
+    countries = countries_str.split(',')  
+    return len(countries)
+
+def count_languages(languages_str):
+    languages = languages_str.split(',')  
+    return len(languages)
+
+def get_similarity(propensity_score1, propensity_score2):
+    '''Calculate similarity for instances with given propensity scores'''
+    return 1-np.abs(propensity_score1-propensity_score2)
+
+def propensity_score(df):
+    #let's reduce the dataset to get only movies with revenue that are no nan. 
+    dataframe=get_subset_box_office(df)
+
+    #get the Q3 threshold for diversity. 
+    diversity_threshold=get_thresholds_diversity(dataframe,diversity_quantile=0.75)
+
+    #add three column treat, number of countries and number of languages. 
+    dataframe['Number_of_countries'] = dataframe['Movie_countries'].apply(count_countries)
+    dataframe['Number_of_languages'] = dataframe['Movie_languages'].apply(count_languages)
+    dataframe['treat']=(dataframe['diversity'] > diversity_threshold).astype(int)
+
+    # let's standardize the continuous features. 
+    dataframe['Movie_release_date'] = (dataframe['Movie_release_date'] - dataframe['Movie_release_date'].mean())/dataframe['Movie_release_date'].std()
+    dataframe['Number_of_countries'] = (dataframe['Number_of_countries'] - dataframe['Number_of_countries'].mean())/dataframe['Number_of_countries'].std()
+    dataframe['Number_of_languages'] = (dataframe['Number_of_languages'] - dataframe['Number_of_languages'].mean())/dataframe['Number_of_languages'].std()
+
+    mod = smf.logit(formula= 'treat ~  Movie_release_date + Number_of_countries + Number_of_languages' , data=dataframe)
+    res = mod.fit()
+
+    dataframe['Propensity_score'] = res.predict()
+
+    dataframe=dataframe.sample(n=500,random_state=42)
+    
+   # Treatment is diversity. 
+    treatment_df = dataframe[dataframe['treat'] == 1]
+    control_df = dataframe[dataframe['treat'] == 0]
+
+    # Create an empty undirected graph
+    G = nx.Graph()
+
+    # Loop through all the pairs of instances
+    for control_id, control_row in control_df.iterrows():
+        for treatment_id, treatment_row in treatment_df.iterrows():
+
+        # Calculate the similarity
+            similarity = get_similarity(control_row['Propensity_score'],treatment_row['Propensity_score'])
+
+        # Add an edge between the two instances weighted by the similarity between them
+            G.add_weighted_edges_from([(control_id, treatment_id, similarity)])
+
+# Generate and return the maximum weight matching on the generated graph
+    matching = nx.max_weight_matching(G)
+    matched_indices = [node for edge in matching for node in edge]
+    balanced_df_1 = dataframe.loc[matched_indices]
+    return balanced_df_1, len(matching)
+
+def get_ATE(dataframe,number):
+    treated = dataframe.loc[dataframe['treat'] == 1]
+    control = dataframe.loc[dataframe['treat'] == 0]
+    y_treat= treated['Movie_box_office_revenue'].sum()
+    y_control= control['Movie_box_office_revenue'].sum()
+    ATE= (1/number)* (y_treat-y_control)
+    return print(f"Average Treatment Effect (ATE) : {ATE}")
+
+def plot_propensity(dataframe,number, color_group_1, color_group_2, title, html_output):
+    """
+    Plot the propensity score distribution for the treated and control groups.
+    """
+    treated = dataframe.loc[dataframe['treat'] == 1]
+    control = dataframe.loc[dataframe['treat'] == 0]
+    # Create a histogram for treated
+    treated_hist = go.Histogram(
+        x=treated['Movie_box_office_revenue'],
+        name='Treated',
+        marker=dict(color=color_group_1[0]),
+        opacity=0.6
+    )
+
+    # Create a histogram for control
+    control_hist = go.Histogram(
+        x=control['Movie_box_office_revenue'],
+        name='Control',
+        marker=dict(color=color_group_2[0]),
+        opacity=0.4
+    )
+     # Create a figure and add both histograms
+    fig = go.Figure(data=[treated_hist, control_hist])
+    set_background_color(fig)
+    set_figsize(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
+    fig.update_layout(title=title,
+        xaxis_title='Box office revenue',
+        yaxis_title='Movie count',
+        legend_title = 'Group',
+        barmode='overlay',
+        plot_bgcolor='white')
+    # Save the plot as an HTML file in the test folder
+    fig.write_html(f'tests/{html_output}.html')
+
+    # Display the figure
+    fig.show()
