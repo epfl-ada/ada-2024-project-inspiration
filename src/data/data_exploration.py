@@ -504,7 +504,8 @@ def propensity_score(df):
     dataframe['Number_of_languages'] = dataframe['Movie_languages'].apply(count_languages)
     dataframe['treat']=(dataframe['diversity'] > diversity_threshold).astype(int)
 
-    # let's standardize the continuous features. 
+    # let's standardize the continuous features.
+    
     dataframe['Movie_release_date'] = (dataframe['Movie_release_date'] - dataframe['Movie_release_date'].mean())/dataframe['Movie_release_date'].std()
     dataframe['Number_of_countries'] = (dataframe['Number_of_countries'] - dataframe['Number_of_countries'].mean())/dataframe['Number_of_countries'].std()
     dataframe['Number_of_languages'] = (dataframe['Number_of_languages'] - dataframe['Number_of_languages'].mean())/dataframe['Number_of_languages'].std()
