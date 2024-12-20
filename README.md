@@ -34,7 +34,7 @@ The directory structure of our project is as follows:
 │   ├── scripts                         <- Shell scripts
 │       ├── load_awards_data.py                 <- file for loading awards data in \processed_data
 │
-├── plots                       <- plots for the data visualisation on website saved in .html
+├── tests                       <- plots for the data visualisation on website saved in .html
 │
 ├── results.ipynb               <- a well-structured notebook showing the results
 ├── preliminary_results_P2.ipynb<- Notebook with preliminary results from milestone 2
