@@ -465,7 +465,6 @@ def regression(df, features, target):
     
     return results_df, model
 
-<<<<<<< HEAD
 # Function to store correlation results
 def store_corr(corr_type, column_name, results):
     """
@@ -493,7 +492,6 @@ def pearson(df, column_name, box_office = False):
         df = get_subset_box_office(df)
     results_ps = stats.pearsonr(df[column_name], df['diversity'])
     return store_corr('Pearson', column_name, results_ps)
-=======
 def get_thresholds_diversity(df, diversity_quantile):
     diversity_threshold = df['diversity'].quantile(diversity_quantile)
     return diversity_threshold
@@ -607,4 +605,3 @@ def plot_propensity(dataframe,number, color_group_1, color_group_2, title, html_
 
     # Display the figure
     fig.show()
->>>>>>> origin/main
