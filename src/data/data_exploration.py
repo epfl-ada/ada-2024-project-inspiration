@@ -590,3 +590,55 @@ def plot_propensity(dataframe,number, color_group_1, color_group_2, title, html_
 
     # Display the figure
     fig.show()
+
+def get_ATE_ratings(dataframe,number):
+    treated = dataframe.loc[dataframe['treat'] == 1]
+    control = dataframe.loc[dataframe['treat'] == 0]
+    y_treat= treated['Ratings'].sum()
+    y_control= control['Ratings'].sum()
+    ATE= (1/number)* (y_treat-y_control)
+    return print(f"Average Treatment Effect (ATE) : {ATE}")
+
+def plot_propensity_ratings(dataframe,number, color_group_1, color_group_2, title, html_output):
+    """
+    Plot the propensity score distribution for the treated and control groups.
+    """
+    treated = dataframe.loc[dataframe['treat'] == 1]
+    control = dataframe.loc[dataframe['treat'] == 0]
+    # Create a histogram for treated
+    treated_hist = go.Histogram(
+        x=treated['Ratings'],
+        name='Treated',
+        marker=dict(color=color_group_1[0]),
+        opacity=0.6
+    )
+
+    # Create a histogram for control
+    control_hist = go.Histogram(
+        x=control['Ratings'],
+        name='Control',
+        marker=dict(color=color_group_2[0]),
+        opacity=0.4
+    )
+     # Create a figure and add both histograms
+    fig = go.Figure(data=[treated_hist, control_hist])
+    set_background_color(fig)
+    set_figsize(fig)
+    fig.update_layout(plot_bgcolor="white",     # Background color of the plot area
+        yaxis=dict(                             # Set the gris for the Y-axis
+            showgrid=True,          
+            gridcolor="lightgray",  
+            gridwidth=1             
+        )) 
+    fig.update_layout(title=title,
+        xaxis_title='Ratings',
+        yaxis_title='Movie count',
+        legend_title = 'Group',
+        barmode='overlay',
+        plot_bgcolor='white')
+    # Save the plot as an HTML file in the test folder
+    fig.write_html(f'tests/{html_output}.html')
+
+    # Display the figure
+    fig.show()
+
