@@ -208,7 +208,7 @@ def get_subset_box_office(df):
     subset_box_office = df.dropna(subset=['Movie_box_office_revenue'])
     return subset_box_office
 
-def plot_interactive_bar_plot(categorie,diversity,name, std_success,color_high, color_low, title, html_output):
+def plot_interactive_bar_plot(categorie,diversity, std_success,color_high, color_low, title, html_output):
     """
     Plot an interactive bar plot with the specified categories and diversity scores.
     """
@@ -223,7 +223,6 @@ def plot_interactive_bar_plot(categorie,diversity,name, std_success,color_high, 
         type='data',
         array=std_success,
         visible=True),
-        name=name,
         marker=dict(color=colors)
     ))
 
@@ -234,7 +233,6 @@ def plot_interactive_bar_plot(categorie,diversity,name, std_success,color_high, 
         xaxis_title="Categories",
         yaxis_title="Average Diversity",
         xaxis_tickangle=-30,
-        showlegend=True
     )
 
     # Set the background color
@@ -376,20 +374,6 @@ def get_thresholds(df, ratings_quantile, box_office_quantile):
 
     return ratings_threshold, box_office_threshold
 
-# def store_t_test(t_test, metric):
-#     """
-#     Store the t-test results in a DataFrame and save it to HTML.
-#     """
-#     # Create a DataFrame for the t-test results with a single row
-#     styled_df = pd.DataFrame({
-#         'Metric': [metric],
-#         'Statistic': [t_test.statistic],
-#         'P-value': [t_test.pvalue]
-#     }).set_index('Metric')
-
-#     styled_df.to_html(f'tests/t_test_{metric}.html')
-#     return styled_df
-
 def store_t_test(t_test, metric):
     """
     Store the t-test results in a DataFrame and save it to HTML.
@@ -426,7 +410,6 @@ def get_t_tests(df, ratings_quantile=0.75, box_office_quantile=0.75):
     t_test_ratings = store_t_test(t_test_ratings, 'Ratings')
     t_test_box = store_t_test(t_test_box, 'Box_office_revenue')
     return t_test_sucess, t_test_nomination, t_test_ratings, t_test_box
-
 
 def regression(df, features, target):
     # Split features and target
@@ -492,6 +475,7 @@ def pearson(df, column_name, box_office = False):
         df = get_subset_box_office(df)
     results_ps = stats.pearsonr(df[column_name], df['diversity'])
     return store_corr('Pearson', column_name, results_ps)
+
 def get_thresholds_diversity(df, diversity_quantile):
     diversity_threshold = df['diversity'].quantile(diversity_quantile)
     return diversity_threshold
