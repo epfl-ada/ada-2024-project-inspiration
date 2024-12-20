@@ -421,3 +421,31 @@ def regression(df, features, target):
         print("As the R-squared is below 0.1, the model is not good enough to fit the data.")
     
     return results_df, model
+
+# Function to store correlation results
+def store_corr(corr_type, column_name, results):
+    """
+    Store the correlation results in a DataFrame and save it to HTML.
+    """
+    # Create a DataFrame with the desired structure
+    styled_df = pd.DataFrame({
+        'Correlation Type': [corr_type],
+        'Correlation': [results.correlation],
+        'P-Value': [results.pvalue]
+    })
+
+    styled_df[['Correlation', 'P-Value']] = styled_df[['Correlation', 'P-Value']].map(lambda x: f'{x:.3e}')
+
+    # Save the DataFrame to an HTML file
+    styled_df.to_html(f'tests/corr_{column_name}_{corr_type}.html', index=False)
+    return styled_df
+
+def spearman(df, column_name):
+    results_sp = stats.spearmanr(df[column_name], df['diversity'])
+    return store_corr('Spearman', column_name, results_sp)
+
+def pearson(df, column_name, box_office = False):
+    if box_office == True:
+        df = get_subset_box_office(df)
+    results_ps = stats.pearsonr(df[column_name], df['diversity'])
+    return store_corr('Pearson', column_name, results_ps)
