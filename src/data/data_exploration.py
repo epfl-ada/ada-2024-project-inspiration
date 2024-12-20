@@ -521,12 +521,12 @@ def propensity_score(df):
     dataframe['treat']=(dataframe['diversity'] > diversity_threshold).astype(int)
 
     # let's standardize the continuous features.
-    dataframe['Movie_runtime'] = (dataframe['Movie_runtime'] - dataframe['Movie_runtime'].mean())/dataframe['Movie_runtime'].std()
+    
     dataframe['Movie_release_date'] = (dataframe['Movie_release_date'] - dataframe['Movie_release_date'].mean())/dataframe['Movie_release_date'].std()
     dataframe['Number_of_countries'] = (dataframe['Number_of_countries'] - dataframe['Number_of_countries'].mean())/dataframe['Number_of_countries'].std()
     dataframe['Number_of_languages'] = (dataframe['Number_of_languages'] - dataframe['Number_of_languages'].mean())/dataframe['Number_of_languages'].std()
 
-    mod = smf.logit(formula= 'treat ~  Movie_runtime + Movie_release_date + Number_of_countries + Number_of_languages' , data=dataframe)
+    mod = smf.logit(formula= 'treat ~  Movie_release_date + Number_of_countries + Number_of_languages' , data=dataframe)
     res = mod.fit()
 
     dataframe['Propensity_score'] = res.predict()
