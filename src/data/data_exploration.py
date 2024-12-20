@@ -314,11 +314,12 @@ def store_t_test(t_test, metric):
     """
     # Create a DataFrame with the desired structure
     styled_df = pd.DataFrame({
-        'Metric': [' ', ' '],  # Empty rows for Metric
-        'Statistic': [t_test.statistic, ' '],  # Statistic on the first row
-        'P-value': [t_test.pvalue, ' ']        # P-value on the second row
+        'Metric': [' '],  # Empty rows for Metric
+        'Statistic': [t_test.statistic],  # Statistic on the first row
+        'P-value': [t_test.pvalue]        # P-value on the second row
     })
     
+    styled_df[['Statistic', 'P-value']] = styled_df[['Statistic', 'P-value']].map(lambda x: f'{x:.3e}')
     # Add the metric as the index for the first row
     styled_df.iloc[0, 0] = metric
 
