@@ -101,7 +101,7 @@ def ethnic_entropy(actors_df,mov_div,type = '*'): #the type is how we define div
     mov_div['max_entropy'] = mov_div['actor_number']*np.log(16)                                                                     #max entropy of a state with 16 possible ethnic_groups 
     entropy_by_movie = ethn_count.groupby('Wikipedia_movie_ID')['entropy'].sum().reset_index()                                      #sum the entropies for a single movie
     diversity_final = mov_div.merge(entropy_by_movie[['Wikipedia_movie_ID', 'entropy']], on='Wikipedia_movie_ID', how='left')       #merge everything together for final_df
-    diversity_final.to_csv('div_test.csv')
+    # diversity_final.to_csv('div_test.csv')
     if type == 'naive': 
         diversity_final['diversity'] = diversity_final['naive_diversity']
     elif type == 'entropy': 

@@ -20,8 +20,10 @@ The directory structure of our project is as follows:
 ```
 ├── data                        <- Project data files
 │   ├── raw_data                <- Data unprocessed directory
-│   ├── processed_data          <- Processed data directory      
-│
+│   ├── processed_data          <- Processed data directory     
+│       ├── clean_dataset.csv                   <- cleaned dataset with all the information about the movies 
+│       ├── success_and_diversity.csv           <- dataset used for main analysis with diversity and success
+| 
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
 │       ├── cleaning_data.py                    <- file for cleaning our datasets
@@ -194,13 +196,13 @@ Success is defined based on several parameters:
 - **Ratings**: The ratings of the movie, with a threshold defined by the 75th percentile.
 - **Box Office Revenue**: The box office revenue of the movie, with a threshold defined by the 75th percentile.
 
-We created a global success score by considering a movie successful when it meets at least one of the three criteria. This score is used to compare the success of movies with different criteria.
+We created a global success score by considering a movie successful when it meets at least one of the three criteria. This score is used to compare the success of movies with different criteria. We obtain a pourcentage of 25 % of successful movies. Which is a good balance between the two groups.
 
 ### Design of Plot Functions
 The plot functions are designed to visualize various aspects of the data, such as the distribution of diversity scores, the evolution of diversity over time, and the relationship between diversity and success parameters. The functions use Plotly for interactive visualizations and are customized to match the website's color scheme.
 
 ### Main analysis
-#### 1) **Comparing Diversity Across Success Levels**
+#### 1) **Comparing Diversity Across Success**
 We calculated the average diversity score for successful and less successful films and found that successful films tend to have higher diversity scores. The difference in diversity averages between the two groups is statistically significant, indicating that diversity may be a factor in a film's success.
 
 #### 2) **Assessing Correlation between Diversity and Success**
